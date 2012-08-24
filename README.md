@@ -14,7 +14,7 @@ If you're browsing on any of the following pages (more services coming soon!):
 
 …then a "JAM" icon will appear in your URL bar. 
 
-Click it to go directly to the jam preview / customisation screen on This Is My Jam, bypassing that pesky search etc. Sweet!
+Click it to go directly to the jam preview / customisation screen on This Is My Jam, bypassing that pesky search step. Sweet!
 
 
 *Conceived by [Matthew Ogle] on the train to [Music Hack Day Scotland], 24 August 2012. This could be much better, care to help?*
