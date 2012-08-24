@@ -1,7 +1,7 @@
 jamlet
 ======
 
-**Jamlet** is a little extension that lets you change your current jam on [This Is My Jam] based on the contents of your current tab in Chrome.
+**Jamlet** is a little extension that lets you change your jam on [This Is My Jam] based on the contents of your current tab in Chrome.
 
 If you're browsing on any of the following pages (more services coming soon!):
 
