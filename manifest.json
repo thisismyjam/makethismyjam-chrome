@@ -1,6 +1,6 @@
 {
 	"name": "Jamlet",
-	"version": "0.1.5",
+	"version": "0.1.6.0",
 	"description": "An easy way to update your song on This Is My Jam whilst browsing supported music sites (SoundCloud, YouTube, Hype Machine, etc).",
 	"page_action": {
 	  "default_icon": "icon.png", 
@@ -18,7 +18,7 @@
 	    }
 	  ],
 	"permissions" : [
-	  "tabs"
+	  "tabs", "http://*.thisismyjam.com/*", "https://*.thisismyjam.com/*"
 	],
 	"icons" : {
 	  "48" : "icon-48.png",
