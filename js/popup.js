@@ -13,7 +13,15 @@ Popup = {
 
     Jamlet.fetchHomeFeed(function(error, response) {
       if (error) {
-        this.element.innerHTML = 'There was an error.';
+        if (error.status === 401) {
+          $(this.element)
+            .html('You need to <a href="#">sign in</a>.')
+            .find('a').click(function() {
+              chrome.tabs.create({url: Jamlet.baseWebURL});
+            });
+        } else {
+          $(this.element).text('Tragically, there was an HTTP ' + error.status + ' error. Sorry.');
+        }
       } else {
         this.element.innerHTML = 'There are ' + response.jams.length + ' jams in your home feed.';
       }

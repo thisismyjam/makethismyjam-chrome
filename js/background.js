@@ -1,5 +1,6 @@
 Jamlet = {
-  baseUrl: 'http://local.thisismyjam.com',
+  baseWebURL: 'http://local.thisismyjam.com',
+  baseAPIURL: 'http://local.api.thisismyjam.com',
 
   fetchHomeFeed: function(callback) {
     this.authenticate(function(error, credentials) {
@@ -10,25 +11,25 @@ Jamlet = {
 
   authenticate: function(callback) {
     $.ajax({
-      url: this.baseUrl + '/signin/credentials',
+      url: this.baseWebURL + '/signin/credentials',
       dataType: 'json',
       success: function(response) {
         callback(null, response.credentials);
       },
       error: function(jqXHR, textStatus, errorThrown) {
-        callback(textStatus);
+        callback({status: jqXHR.status});
       }
     })
   },
 
   apiRequest: function(path, callback) {
     $.ajax({
-      url: this.baseUrl + '/1' + path,
+      url: this.baseAPIURL + '/1' + path,
       success: function(data) {
         callback(null, data);
       },
       error: function(jqXHR, textStatus, errorThrown) {
-        callback(textStatus);
+        callback({status: jqXHR.status});
       }
     })
   },
