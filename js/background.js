@@ -1,6 +1,6 @@
 Jamlet = {
-  baseWebURL: 'http://local.thisismyjam.com',
-  baseAPIURL: 'http://local.api.thisismyjam.com',
+  baseWebURL: 'http://www.thisismyjam.com',
+  baseAPIURL: 'http://api.thisismyjam.com',
 
   fetchHomeFeed: function(callback) {
     this.authenticate(function(error, credentials) {
