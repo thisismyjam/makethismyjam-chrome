@@ -7,7 +7,7 @@ build_dir:
 	mkdir -p $(BUILD_DIR)
 
 package: build_dir
-	"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --pack-extension=$(EXTENSION_DIR) --pack-extension-key=extension.pem
+	"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --pack-extension=$(EXTENSION_DIR) --pack-extension-key=jamlet.pem
 	mv extension.crx $(BUILD_DIR)
 
 update_manifest: build_dir
