@@ -1,15 +1,36 @@
 Jamlet = {
-  init: function() {
-    chrome.tabs.onUpdated.addListener(this.checkForJammableUrl.bind(this));
-    chrome.pageAction.onClicked.addListener(this.jamletClicked.bind(this));
+  baseUrl: 'http://local.thisismyjam.com',
+
+  fetchHomeFeed: function(callback) {
+    this.authenticate(function(error, credentials) {
+      if (error) return callback(error);
+      this.apiRequest('/' + credentials.username + '/homeFeed.json', callback);
+    }.bind(this));
   },
 
-  checkForJammableUrl: function(tabId, changeInfo, tab) {
-    if (this.isPotentiallyJammable(tab.url)) {
-      chrome.pageAction.show(tabId);
-    } else {
-      chrome.pageAction.hide(tabId);
-    }
+  authenticate: function(callback) {
+    $.ajax({
+      url: this.baseUrl + '/signin/credentials',
+      dataType: 'json',
+      success: function(response) {
+        callback(null, response.credentials);
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        callback(textStatus);
+      }
+    })
+  },
+
+  apiRequest: function(path, callback) {
+    $.ajax({
+      url: this.baseUrl + '/1' + path,
+      success: function(data) {
+        callback(null, data);
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        callback(textStatus);
+      }
+    })
   },
 
   jamletClicked: function(tab) {
@@ -41,5 +62,3 @@ Jamlet = {
     return false;
   }
 };
-
-Jamlet.init();
