@@ -1,7 +1,7 @@
 import sys
 import json
 
-app_id = "dapeicgaignkankkcfaefaaikcdpmkac"
+app_id = sys.argv[2]
 crx_url = "https://dl.dropbox.com/u/166030/jamlet/extension.crx"
 
 manifest_path = sys.argv[1]

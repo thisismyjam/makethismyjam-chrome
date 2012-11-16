@@ -1,5 +1,6 @@
 EXTENSION_DIR=extension
 BUILD_DIR=build
+APP_ID=dapeicgaignkankkcfaefaaikcdpmkac
 
 default: package update_manifest
 
@@ -11,4 +12,4 @@ package: build_dir
 	mv extension.crx $(BUILD_DIR)
 
 update_manifest: build_dir
-	python scripts/update_manifest.py $(EXTENSION_DIR)/manifest.json > $(BUILD_DIR)/updates.xml
+	python scripts/update_manifest.py $(EXTENSION_DIR)/manifest.json $(APP_ID) > $(BUILD_DIR)/updates.xml
