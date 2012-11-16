@@ -1,7 +1,14 @@
+EXTENSION_DIR=extension
+BUILD_DIR=build
+
 default: package update_manifest
 
-package:
-	"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --pack-extension=extension --pack-extension-key=extension.pem
+build_dir:
+	mkdir -p $(BUILD_DIR)
 
-update_manifest:
-	python scripts/update_manifest.py
+package: build_dir
+	"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --pack-extension=$(EXTENSION_DIR) --pack-extension-key=extension.pem
+	mv extension.crx $(BUILD_DIR)
+
+update_manifest: build_dir
+	python scripts/update_manifest.py $(EXTENSION_DIR)/manifest.json > $(BUILD_DIR)/updates.xml

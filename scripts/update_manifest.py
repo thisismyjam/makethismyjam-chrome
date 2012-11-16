@@ -1,9 +1,11 @@
+import sys
 import json
 
 app_id = "dapeicgaignkankkcfaefaaikcdpmkac"
 crx_url = "https://dl.dropbox.com/u/166030/jamlet/extension.crx"
 
-manifest = json.loads(open("extension/manifest.json").read())
+manifest_path = sys.argv[1]
+manifest = json.loads(open(manifest_path).read())
 version = manifest['version']
 
 xml_template = """<?xml version='1.0' encoding='UTF-8'?>
@@ -16,4 +18,4 @@ xml_template = """<?xml version='1.0' encoding='UTF-8'?>
 
 xml = xml_template % (app_id, crx_url, version)
 
-open("updates.xml", "w").write(xml)
+print(xml)
