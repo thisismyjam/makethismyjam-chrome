@@ -60,11 +60,11 @@ Popup = {
   },
 
   renderHomeFeed: function() {
-    var items = $("<ul/>").addClass("home-feed");
+    var items = $("<div/>").addClass("home-feed");
 
     $.each(this.homeFeed.jams, function() {
       var jam = this;
-      var item = $("<li/>");
+      var item = $("<div/>").addClass('jam');
 
       $("<div/>").addClass("title").text(jam.title).appendTo(item);
       $("<div/>").addClass("artist").text(jam.artist).appendTo(item);

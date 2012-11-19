@@ -15,20 +15,20 @@ body {
   left: 50%;
 }
 
-ul.home-feed {
+.home-feed {
   list-style: none;
 }
 
-ul.home-feed li {
+.home-feed .jam {
   padding: 6px;
   border-top: 1px solid #ccc;
   cursor: pointer;
 }
 
-ul.home-feed li:first-child {
+.home-feed .jam:first-child {
   border-top: none;
 }
 
-ul.home-feed li:hover {
+.home-feed .jam:hover {
   background: #eee;
 }
