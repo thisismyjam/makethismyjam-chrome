@@ -12,6 +12,8 @@ Popup = {
     this.setStatus('fetchingHomeFeed');
 
     Jamlet.fetchHomeFeed(function(error, response) {
+      if (this.status !== 'fetchingHomeFeed') return; // we've moved on
+
       if (error) {
         if (error.status === 401) {
           this.setStatus('unauthenticated');
