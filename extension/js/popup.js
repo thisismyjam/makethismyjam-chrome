@@ -5,7 +5,16 @@ Popup = {
 
   init: function() {
     this.element = document.getElementById('popup');
+    this.fetchCurrentTabIsJammable();
     this.fetchHomeFeed();
+  },
+
+  fetchCurrentTabIsJammable: function() {
+    Jamlet.fetchCurrentTabIsJammable(function(url) {
+      if (url) {
+        this.setCreateJamURL(url);
+      }
+    }.bind(this));
   },
 
   fetchHomeFeed: function() {
@@ -28,6 +37,11 @@ Popup = {
     }.bind(this));
   },
 
+  setCreateJamURL: function(url) {
+    this.createJamURL = url;
+    this.render();
+  },
+
   setStatus: function(status) {
     this.status = status;
     this.render();
@@ -35,6 +49,9 @@ Popup = {
 
   render: function() {
     $(this.element).empty();
+
+    if (this.createJamURL)
+      this.renderJamButton();
 
     switch (this.status) {
       case 'fetchingHomeFeed':
@@ -50,6 +67,17 @@ Popup = {
         this.renderError();
         break;
     }
+  },
+
+  renderJamButton: function() {
+    var url = this.createJamURL;
+    var container = $("<div/>").addClass("create-jam");
+    var button = $("<button/>")
+      .text("Make this my jam")
+      .click(function() { chrome.tabs.create({url: url}) });
+
+    button.appendTo(container);
+    container.appendTo(this.element);
   },
 
   renderSpinner: function() {

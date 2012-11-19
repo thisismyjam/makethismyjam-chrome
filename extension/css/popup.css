@@ -15,6 +15,16 @@ body {
   left: 50%;
 }
 
+.create-jam {
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid #ccc;
+}
+
+.create-jam button {
+  padding: 4px 8px;
+}
+
 .home-feed {
   list-style: none;
 }

@@ -2,6 +2,16 @@ Jamlet = {
   baseWebURL: 'http://www.thisismyjam.com',
   baseAPIURL: 'http://api.thisismyjam.com',
 
+  currentTab: null,
+
+  init: function() {
+    chrome.tabs.onActivated.addListener(this.tabActivated.bind(this));
+  },
+
+  tabActivated: function(tab) {
+    this.currentTab = tab;
+  },
+
   fetchHomeFeed: function(callback) {
     this.authenticate(function(error, credentials) {
       if (error) return callback(error);
@@ -34,9 +44,20 @@ Jamlet = {
     })
   },
 
-  jamletClicked: function(tab) {
-    var destUrl = 'http://www.thisismyjam.com/jam/create?signin=1&source=jamlet&url=' + encodeURIComponent(tab.url);
-    chrome.tabs.create({'url': destUrl});
+  fetchCurrentTabIsJammable: function(callback) {
+    if (!this.currentTab) return callback(null);
+
+    chrome.tabs.get(this.currentTab.tabId, function(tab) {
+      if (tab && this.isPotentiallyJammable(tab.url)) {
+        return callback(this.createJamURL(tab.url));
+      } else {
+        return callback(null);
+      }
+    }.bind(this));
+  },
+
+  createJamURL: function(url) {
+    return 'http://www.thisismyjam.com/jam/create?signin=1&source=jamlet&url=' + encodeURIComponent(url);
   },
 
   isPotentiallyJammable: function(url) {
@@ -63,3 +84,5 @@ Jamlet = {
     return false;
   }
 };
+
+Jamlet.init();
