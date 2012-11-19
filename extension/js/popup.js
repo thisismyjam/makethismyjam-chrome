@@ -36,32 +36,43 @@ Popup = {
   onChangeStatus: function() {
     switch (this.status) {
       case 'fetchingHomeFeed':
-        var spinnerElement = document.createElement('div');
-        spinnerElement.className = 'spinner-container';
-        this.element.appendChild(spinnerElement);
-
-        var spinner = new Spinner();
-        spinner.spin(spinnerElement);
-
+        this.renderSpinner();
         break;
-
       case 'homeFeed':
-        this.element.innerHTML = 'There are ' + this.homeFeed.jams.length + ' jams in your home feed.';
+        this.renderHomeFeed();
         break;
-
       case 'unauthenticated':
-        $(this.element)
-          .html('You need to <a href="#">sign in</a>.')
-          .find('a').click(function() {
-            chrome.tabs.create({url: Jamlet.baseWebURL});
-          });
-
+        this.renderSignInLink();
         break;
-
       case 'error':
-        $(this.element).text('Tragically, there was an HTTP ' + this.lastError.status + ' error. Sorry.');
+        this.renderError();
         break;
     }
+  },
+
+  renderSpinner: function() {
+    var spinnerElement = document.createElement('div');
+    spinnerElement.className = 'spinner-container';
+    this.element.appendChild(spinnerElement);
+
+    var spinner = new Spinner();
+    spinner.spin(spinnerElement);
+  },
+
+  renderHomeFeed: function() {
+    this.element.innerHTML = 'There are ' + this.homeFeed.jams.length + ' jams in your home feed.';
+  },
+
+  renderSignInLink: function() {
+    $(this.element)
+      .html('You need to <a href="#">sign in</a>.')
+      .find('a').click(function() {
+        chrome.tabs.create({url: Jamlet.baseWebURL});
+      });
+  },
+
+  renderError: function() {
+    $(this.element).text('Tragically, there was an HTTP ' + this.lastError.status + ' error. Sorry.');
   }
 };
 
