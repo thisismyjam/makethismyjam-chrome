@@ -66,9 +66,12 @@ Popup = {
       var jam = this;
       var item = $("<div/>").addClass('jam');
 
-      $("<div/>").addClass("title").text(jam.title).appendTo(item);
-      $("<div/>").addClass("artist").text(jam.artist).appendTo(item);
-      $("<div/>").addClass("username").text('@' + jam.from).appendTo(item);
+      $("<div/>").addClass("jamvatar").append($("<img/>").attr("src", jam.jamvatarSmall)).appendTo(item);
+
+      var info = $("<div/>").addClass('info').appendTo(item);
+      $("<div/>").addClass("title").text(jam.title).appendTo(info);
+      $("<div/>").addClass("artist").text(jam.artist).appendTo(info);
+      $("<div/>").addClass("username").text('@' + jam.from).appendTo(info);
 
       item.click(function() { chrome.tabs.create({url: jam.url}); });
       item.appendTo(items);

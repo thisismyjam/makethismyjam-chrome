@@ -32,3 +32,26 @@ body {
 .home-feed .jam:hover {
   background: #eee;
 }
+
+.jam {
+  overflow: hidden;
+}
+
+.jam .jamvatar {
+  width: 80px;
+  height: 80px;
+  float: left;
+  margin-right: 6px;
+}
+
+.jam .info {
+  overflow: hidden;
+}
+
+.jam .title {
+  font-weight: bold;
+}
+
+.jam .username {
+  color: #bbb;
+}
