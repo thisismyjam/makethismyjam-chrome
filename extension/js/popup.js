@@ -30,10 +30,12 @@ Popup = {
 
   setStatus: function(status) {
     this.status = status;
-    this.onChangeStatus();
+    this.render();
   },
 
-  onChangeStatus: function() {
+  render: function() {
+    $(this.element).empty();
+
     switch (this.status) {
       case 'fetchingHomeFeed':
         this.renderSpinner();
@@ -77,19 +79,29 @@ Popup = {
       item.appendTo(items);
     });
 
-    $(this.element).empty().append(items);
+    this.$(".home-feed").remove();
+    $(this.element).append(items);
   },
 
   renderSignInLink: function() {
-    $(this.element)
+    $("<div/>")
+      .addClass("sign-in")
       .html('You need to <a href="#">sign in</a>.')
       .find('a').click(function() {
         chrome.tabs.create({url: Jamlet.baseWebURL});
-      });
+      })
+      .appendTo(this.element);
   },
 
   renderError: function() {
-    $(this.element).text('Tragically, there was an HTTP ' + this.lastError.status + ' error. Sorry.');
+    $("<div/>")
+      .addClass("error")
+      .text('Tragically, there was an HTTP ' + this.lastError.status + ' error. Sorry.')
+      .appendTo(this.element);
+  },
+
+  $: function(selector) {
+    return $(selector, this.element);
   }
 };
 
