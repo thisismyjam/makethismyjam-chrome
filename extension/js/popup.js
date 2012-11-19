@@ -1,15 +1,27 @@
 Jamlet = chrome.extension.getBackgroundPage().Jamlet;
 
 Popup = {
-  status: 'initial',
-
   init: function() {
     this.element = document.getElementById('popup');
-    this.fetchCurrentTabIsJammable();
-    this.fetchHomeFeed();
-  },
+    
+    this.createJam = new CreateJam({element: $("<div/>").addClass("create-jam").appendTo(this.element)});
+    this.createJam.render();
+    this.createJam.fetch();
 
-  fetchCurrentTabIsJammable: function() {
+    this.homeFeed = new HomeFeed({element: $("<div/>").addClass("home-feed").appendTo(this.element)});
+    this.homeFeed.render();
+    this.homeFeed.fetch();
+  }
+};
+
+function CreateJam(options) {
+  this.element = $(options.element);
+}
+
+CreateJam.prototype = {
+  createJamURL: null,
+
+  fetch: function() {
     Jamlet.fetchCurrentTabIsJammable(function(url) {
       if (url) {
         this.setCreateJamURL(url);
@@ -17,7 +29,35 @@ Popup = {
     }.bind(this));
   },
 
-  fetchHomeFeed: function() {
+  setCreateJamURL: function(url) {
+    this.createJamURL = url;
+    this.render();
+  },
+
+  render: function() {
+    if (this.createJamURL) {
+      var url = this.createJamURL;
+
+      var button = $("<button/>")
+        .text("Make this my jam")
+        .click(function() { chrome.tabs.create({url: url}) });
+
+      this.element.show().append(button);
+    } else {
+      this.element.hide();
+    }
+  }
+}
+
+function HomeFeed(options) {
+  this.element = $(options.element);
+}
+
+HomeFeed.prototype = {
+  status: 'initial',
+  homeFeed: null,
+
+  fetch: function() {
     this.setStatus('fetchingHomeFeed');
 
     Jamlet.fetchHomeFeed(function(error, response) {
@@ -37,21 +77,14 @@ Popup = {
     }.bind(this));
   },
 
-  setCreateJamURL: function(url) {
-    this.createJamURL = url;
-    this.render();
-  },
-
   setStatus: function(status) {
     this.status = status;
     this.render();
   },
 
   render: function() {
-    $(this.element).empty();
-
-    if (this.createJamURL)
-      this.renderJamButton();
+    this.element.toggle(this.status !== 'initial');
+    this.element.empty();
 
     switch (this.status) {
       case 'fetchingHomeFeed':
@@ -69,28 +102,17 @@ Popup = {
     }
   },
 
-  renderJamButton: function() {
-    var url = this.createJamURL;
-    var container = $("<div/>").addClass("create-jam");
-    var button = $("<button/>")
-      .text("Make this my jam")
-      .click(function() { chrome.tabs.create({url: url}) });
-
-    button.appendTo(container);
-    container.appendTo(this.element);
-  },
-
   renderSpinner: function() {
     var spinnerElement = document.createElement('div');
     spinnerElement.className = 'spinner-container';
-    this.element.appendChild(spinnerElement);
+    this.element.append(spinnerElement);
 
     var spinner = new Spinner();
     spinner.spin(spinnerElement);
   },
 
   renderHomeFeed: function() {
-    var items = $("<div/>").addClass("home-feed");
+    var element = this.element;
 
     $.each(this.homeFeed.jams, function() {
       var jam = this;
@@ -104,11 +126,8 @@ Popup = {
       $("<div/>").addClass("username").text('@' + jam.from).appendTo(info);
 
       item.click(function() { chrome.tabs.create({url: jam.url}); });
-      item.appendTo(items);
+      item.appendTo(element);
     });
-
-    this.$(".home-feed").remove();
-    $(this.element).append(items);
   },
 
   renderSignInLink: function() {
@@ -126,10 +145,6 @@ Popup = {
       .addClass("error")
       .text('Tragically, there was an HTTP ' + this.lastError.status + ' error. Sorry.')
       .appendTo(this.element);
-  },
-
-  $: function(selector) {
-    return $(selector, this.element);
   }
 };
 
