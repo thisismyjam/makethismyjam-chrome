@@ -2,7 +2,7 @@ Jamlet = chrome.extension.getBackgroundPage().Jamlet;
 
 Popup = {
   init: function() {
-    this.element = document.getElementById('popup');
+    this.element = $('#popup');
     
     this.createJam = new CreateJam({element: $("<div/>").addClass("create-jam").appendTo(this.element)});
     this.createJam.render();
@@ -103,11 +103,10 @@ HomeFeed.prototype = {
   },
 
   renderSpinner: function() {
-    var spinnerElement = document.createElement('div');
-    spinnerElement.className = 'spinner-container';
-    this.element.append(spinnerElement);
-
+    var spinnerElement = $('<div/>').addClass('spinner-container').get(0);
     var spinner = new Spinner();
+
+    this.element.append(spinnerElement);
     spinner.spin(spinnerElement);
   },
 
