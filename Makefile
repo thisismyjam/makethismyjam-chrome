@@ -15,3 +15,6 @@ package: build_dir
 
 update_manifest: build_dir
 	python scripts/update_manifest.py $(EXTENSION_DIR)/manifest.json $(APP_ID) $(PACKAGE_URL) > $(BUILD_DIR)/updates.xml
+
+clean:
+	rm -rf $(BUILD_DIR)
