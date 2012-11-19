@@ -60,7 +60,21 @@ Popup = {
   },
 
   renderHomeFeed: function() {
-    this.element.innerHTML = 'There are ' + this.homeFeed.jams.length + ' jams in your home feed.';
+    var items = $("<ul/>").addClass("home-feed");
+
+    $.each(this.homeFeed.jams, function() {
+      var jam = this;
+      var item = $("<li/>");
+
+      $("<div/>").addClass("title").text(jam.title).appendTo(item);
+      $("<div/>").addClass("artist").text(jam.artist).appendTo(item);
+      $("<div/>").addClass("username").text('@' + jam.from).appendTo(item);
+
+      item.click(function() { chrome.tabs.create({url: jam.url}); });
+      item.appendTo(items);
+    });
+
+    $(this.element).empty().append(items);
   },
 
   renderSignInLink: function() {

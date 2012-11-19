@@ -1,3 +1,9 @@
+* { margin: 0; padding: 0; }
+
+body {
+  font-family: helvetica;
+}
+
 #popup {
   width: 320px;
   height: 480px;
@@ -7,4 +13,22 @@
   position: absolute;
   top: 50%;
   left: 50%;
+}
+
+ul.home-feed {
+  list-style: none;
+}
+
+ul.home-feed li {
+  padding: 6px;
+  border-top: 1px solid #ccc;
+  cursor: pointer;
+}
+
+ul.home-feed li:first-child {
+  border-top: none;
+}
+
+ul.home-feed li:hover {
+  background: #eee;
 }
