@@ -13,6 +13,15 @@ Popup = {
     this.createJam.render();
     this.createJam.fetch();
 
+    this.currentJam = new CurrentJam({
+      element: $("<div/>").addClass("current-jam").appendTo(this.element),
+      api:     options.api,
+      browser: options.browser
+    });
+
+    this.currentJam.render();
+    this.currentJam.fetch();
+
     this.homeFeed = new HomeFeed({
       element: $("<div/>").addClass("home-feed").appendTo(this.element),
       api:     options.api,
@@ -89,6 +98,63 @@ CreateJam.prototype = {
     }
   }
 }
+
+function CurrentJam(options) {
+  this.element = $(options.element);
+  this.api     = options.api;
+  this.browser = options.browser;
+
+  this.element.click(function() {
+    if (this.jam) {
+      this.browser.createTab({url: this.jam.url});
+    }
+  }.bind(this));
+}
+
+CurrentJam.prototype = {
+  status: 'initial',
+  jam: null,
+
+  fetch: function() {
+    this.setStatus('fetching');
+
+    this.api.fetchCurrentJam(function(error, response) {
+      if (this.status !== 'fetching') return; // we've moved on
+
+      if (error) {
+        if (error.status === 401) {
+          this.setStatus('unauthenticated');
+        } else {
+          this.lastError = error;
+          this.setStatus('error');
+        }
+      } else {
+        this.jam = response.jam;
+        this.setStatus('available');
+      }
+    }.bind(this));
+  },
+
+  setStatus: function(status) {
+    this.status = status;
+    this.render();
+  },
+
+  render: function() {
+    this.element
+      .empty()
+      .attr("data-status", this.status);
+
+    if (this.status === 'available') {
+      $("<div/>").addClass("title").text(this.jam.title).appendTo(this.element);
+      $("<div/>").addClass("artist").text(this.jam.artist).appendTo(this.element);
+
+      if (this.jam.playCount     > 0) $("<div/>").addClass("play-count").text(this.jam.playCount).appendTo(this.element);
+      if (this.jam.likesCount    > 0) $("<div/>").addClass("likes-count").text(this.jam.likesCount).appendTo(this.element);
+      if (this.jam.commentsCount > 0) $("<div/>").addClass("comments-count").text(this.jam.commentsCount).appendTo(this.element);
+    }
+  }
+};
 
 function HomeFeed(options) {
   this.element = $(options.element);

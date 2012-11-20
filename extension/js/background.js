@@ -11,6 +11,13 @@ Jamlet.API = {
     }.bind(this));
   },
 
+  fetchCurrentJam: function(callback) {
+    this.authenticate(function(error, credentials) {
+      if (error) return callback(error);
+      this.apiRequest('/' + credentials.username + '.json', callback);
+    }.bind(this));
+  },
+
   authenticate: function(callback) {
     $.ajax({
       url: this.baseWebURL + '/signin/credentials',

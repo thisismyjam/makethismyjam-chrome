@@ -25,6 +25,38 @@ body {
   padding: 4px 8px;
 }
 
+.current-jam {
+  display: none;
+}
+
+.current-jam[data-status="available"] {
+  display: block;
+  padding: 6px;
+  text-align: center;
+  background: #ddd;
+  cursor: pointer;
+}
+
+.current-jam .title {
+  font-weight: bold;
+}
+
+.current-jam .play-count,
+.current-jam .likes-count,
+.current-jam .comments-count {
+  display: inline-block;
+  font-size: 0.9em;
+}
+
+.current-jam .play-count:after     { content: "\0000A0plays"; }
+.current-jam .likes-count:after    { content: "\0000A0likes"; }
+.current-jam .comments-count:after { content: "\0000A0comments"; }
+
+.current-jam .likes-count:before,
+.current-jam .comments-count:before {
+  content: "\0000A0\0000B7\0000A0";
+}
+
 .home-feed {
   list-style: none;
 }
