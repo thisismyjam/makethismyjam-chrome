@@ -5,6 +5,10 @@ function Component(options) {
   this.api     = options.api;
   this.browser = options.browser;
 
+  if (this.cssClass) {
+    this.element.addClass(this.cssClass);
+  }
+
   this.initialize(options);
 }
 
@@ -43,12 +47,12 @@ Popup = Component.extend({
       $("<div/>").addClass(cssClass).appendTo(this.element);
     }.bind(this));
 
-    this.loading    = this.addComponent(Loading,    "loading",     ".authenticating");
-    this.signIn     = this.addComponent(SignIn,     "sign-in",     ".unauthenticated");
+    this.loading    = this.addComponent(Loading,    ".authenticating");
+    this.signIn     = this.addComponent(SignIn,     ".unauthenticated");
 
-    this.createJam  = this.addComponent(CreateJam,  "create-jam",  ".available");
-    this.currentJam = this.addComponent(CurrentJam, "current-jam", ".available");
-    this.homeFeed   = this.addComponent(HomeFeed,   "home-feed",   ".available");
+    this.createJam  = this.addComponent(CreateJam,  ".available");
+    this.currentJam = this.addComponent(CurrentJam, ".available");
+    this.homeFeed   = this.addComponent(HomeFeed,   ".available");
   },
 
   fetch: function() {
@@ -74,9 +78,9 @@ Popup = Component.extend({
     this.element.children("." + this.status).show();
   },
 
-  addComponent: function(componentClass, cssClass, appendToSelector) {
+  addComponent: function(componentClass, appendToSelector) {
     var component = new componentClass({
-      element: $("<div/>").addClass(cssClass).appendTo(this.$(appendToSelector)),
+      element: $("<div/>").appendTo(this.$(appendToSelector)),
       api:     this.options.api,
       browser: this.options.browser
     });
@@ -88,6 +92,8 @@ Popup = Component.extend({
 });
 
 Loading = Component.extend({
+  cssClass: 'loading',
+
   render: function() {
     this.element.empty();
     new Spinner().spin(this.element.get(0));
@@ -95,6 +101,8 @@ Loading = Component.extend({
 });
 
 SignIn = Component.extend({
+  cssClass: 'sign-in',
+
   render: function() {
     var browser   = this.browser;
     var signInURL = this.api.baseWebURL;
@@ -108,6 +116,7 @@ SignIn = Component.extend({
 });
 
 CreateJam = Component.extend({
+  cssClass: 'create-jam',
   createJamURL: null,
 
   fetch: function() {
@@ -168,6 +177,7 @@ CreateJam = Component.extend({
 });
 
 CurrentJam = Component.extend({
+  cssClass: 'current-jam',
   status: 'initial',
   jam: null,
 
@@ -217,6 +227,7 @@ CurrentJam = Component.extend({
 });
 
 HomeFeed = Component.extend({
+  cssClass: 'home-feed',
   status: 'initial',
   homeFeed: null,
 
