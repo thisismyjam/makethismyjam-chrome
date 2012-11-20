@@ -32,11 +32,39 @@ CreateJam.prototype = {
   createJamURL: null,
 
   fetch: function() {
-    this.browser.fetchCurrentTabIsJammable(function(url) {
-      if (url) {
-        this.setCreateJamURL(url);
+    this.browser.fetchCurrentTabURL(function(url) {
+      if (url && this.isPotentiallyJammable(url)) {
+        this.setCreateJamURL(this.makeCreateJamURL(url));
       }
     }.bind(this));
+  },
+
+  isPotentiallyJammable: function(url) {
+    // YouTube watch page
+    if (url.match(/^(https?:\/\/)?(www\.)?youtube\.com\/watch.+/i))
+      return true;
+    
+    // Potential SoundCloud track page (TODO: Introspect page to make sure?)
+    if (url.match(/^(https?:\/\/)?(www\.)?soundcloud\.com\/[^\/]+\/[^\/]+/i))
+      return true;
+    
+    // Found audio
+    if (url.match(/^[^ ]+\/[^ ]+\.mp3$/))
+      return true;
+    
+    // Hype Machine track page
+    if (url.match(/^(https?:\/\/)?(www\.)?hypem.com\/track[^\/]+/i))
+      return true;
+    
+    // Potential Bandcamp track page (TODO: Introspect page to make sure?)
+    if (url.match(/^(https?:\/\/)[^\/]+\/track\//))
+      return true;
+
+    return false;
+  },
+
+  makeCreateJamURL: function(url) {
+    return 'http://www.thisismyjam.com/jam/create?signin=1&source=jamlet&url=' + encodeURIComponent(url);
   },
 
   setCreateJamURL: function(url) {

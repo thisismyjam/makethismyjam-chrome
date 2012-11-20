@@ -52,44 +52,16 @@ Jamlet.Browser = {
     chrome.tabs.create(options);
   },
 
-  fetchCurrentTabIsJammable: function(callback) {
+  fetchCurrentTabURL: function(callback) {
     if (!this.currentTab) return callback(null);
 
     chrome.tabs.get(this.currentTab.tabId, function(tab) {
-      if (tab && this.isPotentiallyJammable(tab.url)) {
-        return callback(this.createJamURL(tab.url));
+      if (tab) {
+        return callback(tab.url);
       } else {
         return callback(null);
       }
-    }.bind(this));
-  },
-
-  createJamURL: function(url) {
-    return 'http://www.thisismyjam.com/jam/create?signin=1&source=jamlet&url=' + encodeURIComponent(url);
-  },
-
-  isPotentiallyJammable: function(url) {
-    // YouTube watch page
-    if (url.match(/^(https?:\/\/)?(www\.)?youtube\.com\/watch.+/i))
-      return true;
-    
-    // Potential SoundCloud track page (TODO: Introspect page to make sure?)
-    if (url.match(/^(https?:\/\/)?(www\.)?soundcloud\.com\/[^\/]+\/[^\/]+/i))
-      return true;
-    
-    // Found audio
-    if (url.match(/^[^ ]+\/[^ ]+\.mp3$/))
-      return true;
-    
-    // Hype Machine track page
-    if (url.match(/^(https?:\/\/)?(www\.)?hypem.com\/track[^\/]+/i))
-      return true;
-    
-    // Potential Bandcamp track page (TODO: Introspect page to make sure?)
-    if (url.match(/^(https?:\/\/)[^\/]+\/track\//))
-      return true;
-
-    return false;
+    });
   }
 };
 
