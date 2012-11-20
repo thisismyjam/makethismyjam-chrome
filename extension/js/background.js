@@ -1,16 +1,8 @@
-Jamlet = {
+Jamlet = {};
+
+Jamlet.API = {
   baseWebURL: 'http://www.thisismyjam.com',
   baseAPIURL: 'http://api.thisismyjam.com',
-
-  currentTab: null,
-
-  init: function() {
-    chrome.tabs.onActivated.addListener(this.tabActivated.bind(this));
-  },
-
-  tabActivated: function(tab) {
-    this.currentTab = tab;
-  },
 
   fetchHomeFeed: function(callback) {
     this.authenticate(function(error, credentials) {
@@ -42,6 +34,22 @@ Jamlet = {
         callback({status: jqXHR.status});
       }
     })
+  }
+};
+
+Jamlet.Browser = {
+  currentTab: null,
+
+  init: function() {
+    chrome.tabs.onActivated.addListener(this.tabActivated.bind(this));
+  },
+
+  tabActivated: function(tab) {
+    this.currentTab = tab;
+  },
+
+  createTab: function(options) {
+    chrome.tabs.create(options);
   },
 
   fetchCurrentTabIsJammable: function(callback) {
@@ -85,4 +93,4 @@ Jamlet = {
   }
 };
 
-Jamlet.init();
+Jamlet.Browser.init();

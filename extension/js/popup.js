@@ -1,14 +1,23 @@
-Jamlet = chrome.extension.getBackgroundPage().Jamlet;
-
 Popup = {
-  init: function() {
-    this.element = $('#popup');
+  init: function(options) {
+    this.element = options.element;
+    this.api     = options.api;
+    this.browser = options.browser;
     
-    this.createJam = new CreateJam({element: $("<div/>").addClass("create-jam").appendTo(this.element)});
+    this.createJam = new CreateJam({
+      element: $("<div/>").addClass("create-jam").appendTo(this.element),
+      browser: options.browser
+    });
+
     this.createJam.render();
     this.createJam.fetch();
 
-    this.homeFeed = new HomeFeed({element: $("<div/>").addClass("home-feed").appendTo(this.element)});
+    this.homeFeed = new HomeFeed({
+      element: $("<div/>").addClass("home-feed").appendTo(this.element),
+      api:     options.api,
+      browser: options.browser
+    });
+
     this.homeFeed.render();
     this.homeFeed.fetch();
   }
@@ -16,13 +25,14 @@ Popup = {
 
 function CreateJam(options) {
   this.element = $(options.element);
+  this.browser = options.browser;
 }
 
 CreateJam.prototype = {
   createJamURL: null,
 
   fetch: function() {
-    Jamlet.fetchCurrentTabIsJammable(function(url) {
+    this.browser.fetchCurrentTabIsJammable(function(url) {
       if (url) {
         this.setCreateJamURL(url);
       }
@@ -37,10 +47,11 @@ CreateJam.prototype = {
   render: function() {
     if (this.createJamURL) {
       var url = this.createJamURL;
+      var browser = this.browser;
 
       var button = $("<button/>")
         .text("Make this my jam")
-        .click(function() { chrome.tabs.create({url: url}) });
+        .click(function() { browser.createTab({url: url}) });
 
       this.element.show().append(button);
     } else {
@@ -51,6 +62,8 @@ CreateJam.prototype = {
 
 function HomeFeed(options) {
   this.element = $(options.element);
+  this.api     = options.api;
+  this.browser = options.browser;
 }
 
 HomeFeed.prototype = {
@@ -60,7 +73,7 @@ HomeFeed.prototype = {
   fetch: function() {
     this.setStatus('fetchingHomeFeed');
 
-    Jamlet.fetchHomeFeed(function(error, response) {
+    this.api.fetchHomeFeed(function(error, response) {
       if (this.status !== 'fetchingHomeFeed') return; // we've moved on
 
       if (error) {
@@ -112,6 +125,7 @@ HomeFeed.prototype = {
 
   renderHomeFeed: function() {
     var element = this.element;
+    var browser = this.browser;
 
     $.each(this.homeFeed.jams, function() {
       var jam = this;
@@ -124,17 +138,19 @@ HomeFeed.prototype = {
       $("<div/>").addClass("artist").text(jam.artist).appendTo(info);
       $("<div/>").addClass("username").text('@' + jam.from).appendTo(info);
 
-      item.click(function() { chrome.tabs.create({url: jam.url}); });
+      item.click(function() { browser.createTab({url: jam.url}); });
       item.appendTo(element);
     });
   },
 
   renderSignInLink: function() {
+    var browser = this.browser;
+
     $("<div/>")
       .addClass("sign-in")
       .html('You need to <a href="#">sign in</a>.')
       .find('a').click(function() {
-        chrome.tabs.create({url: Jamlet.baseWebURL});
+        browser.createTab({url: this.api.baseWebURL});
       })
       .appendTo(this.element);
   },
@@ -147,4 +163,10 @@ HomeFeed.prototype = {
   }
 };
 
-Popup.init();
+var Jamlet = chrome.extension.getBackgroundPage().Jamlet;
+
+Popup.init({
+  element: $('#popup'),
+  api:     Jamlet.API,
+  browser: Jamlet.Browser
+});
