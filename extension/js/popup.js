@@ -6,6 +6,7 @@ Popup = {
     
     this.createJam = new CreateJam({
       element: $("<div/>").addClass("create-jam").appendTo(this.element),
+      api:     options.api,
       browser: options.browser
     });
 
@@ -25,6 +26,7 @@ Popup = {
 
 function CreateJam(options) {
   this.element = $(options.element);
+  this.api     = options.api;
   this.browser = options.browser;
 }
 
@@ -64,7 +66,7 @@ CreateJam.prototype = {
   },
 
   makeCreateJamURL: function(url) {
-    return 'http://www.thisismyjam.com/jam/create?signin=1&source=jamlet&url=' + encodeURIComponent(url);
+    return this.api.baseWebURL + '/jam/create?signin=1&source=jamlet&url=' + encodeURIComponent(url);
   },
 
   setCreateJamURL: function(url) {
