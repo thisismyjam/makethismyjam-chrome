@@ -1,11 +1,11 @@
 function Component(options) {
-  if (options) {
-    this.element = $(options.element);
-    this.api     = options.api;
-    this.browser = options.browser;
+  this.options = options;
 
-    this.initialize(options);
-  }
+  this.element = $(options.element);
+  this.api     = options.api;
+  this.browser = options.browser;
+
+  this.initialize(options);
 }
 
 Component.extend = function(extensions) {
@@ -13,7 +13,7 @@ Component.extend = function(extensions) {
     Component.call(this, options);
   };
 
-  klass.prototype = new Component();
+  klass.prototype = Object.create(Component.prototype);
 
   for (var key in extensions)
     if (extensions.hasOwnProperty(key))
