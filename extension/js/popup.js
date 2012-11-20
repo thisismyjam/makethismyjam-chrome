@@ -23,27 +23,87 @@ Component.extend = function(extensions) {
 }
 
 Component.prototype = {
-  initialize: function(options) {}
+  initialize: function(options) {},
+
+  setStatus: function(status) {
+    this.status = status;
+    this.render();
+  },
+
+  $: function(selector) {
+    return $(selector, this.element);
+  }
 }
 
 Popup = Component.extend({
+  status: 'initial',
+
   initialize: function(options) {
-    this.addComponent(CreateJam,  "create-jam");
-    this.addComponent(CurrentJam, "current-jam");
-    this.addComponent(HomeFeed,   "home-feed");
+    ["authenticating", "unauthenticated", "available"].forEach(function(cssClass) {
+      $("<div/>").addClass(cssClass).appendTo(this.element);
+    }.bind(this));
+
+    this.loading    = this.addComponent(Loading,    "loading",     ".authenticating");
+    this.signIn     = this.addComponent(SignIn,     "sign-in",     ".unauthenticated");
+
+    this.createJam  = this.addComponent(CreateJam,  "create-jam",  ".available");
+    this.currentJam = this.addComponent(CurrentJam, "current-jam", ".available");
+    this.homeFeed   = this.addComponent(HomeFeed,   "home-feed",   ".available");
   },
 
-  addComponent: function(componentClass, cssClass) {
+  fetch: function() {
+    this.setStatus('authenticating');
+
+    this.api.authenticate(function(error, credentials) {
+      console.log(arguments);
+
+      if (error) {
+        this.setStatus('unauthenticated');
+      } else {
+        this.createJam.fetch();
+        this.currentJam.fetch();
+        this.homeFeed.fetch();
+
+        this.setStatus('available');
+      }
+    }.bind(this));
+  },
+
+  render: function() {
+    this.element.children().hide();
+    this.element.children("." + this.status).show();
+  },
+
+  addComponent: function(componentClass, cssClass, appendToSelector) {
     var component = new componentClass({
-      element: $("<div/>").addClass(cssClass).appendTo(this.element),
+      element: $("<div/>").addClass(cssClass).appendTo(this.$(appendToSelector)),
       api:     this.options.api,
       browser: this.options.browser
     });
 
     component.render();
-    component.fetch();
 
     return component;
+  }
+});
+
+Loading = Component.extend({
+  render: function() {
+    this.element.empty();
+    new Spinner().spin(this.element.get(0));
+  }
+});
+
+SignIn = Component.extend({
+  render: function() {
+    var browser   = this.browser;
+    var signInURL = this.api.baseWebURL;
+
+    this.element.html('You need to <a href="#">sign in</a>.');
+
+    this.$('a').click(function() {
+      browser.createTab({url: signInURL});
+    });
   }
 });
 
@@ -126,12 +186,8 @@ CurrentJam = Component.extend({
       if (this.status !== 'fetching') return; // we've moved on
 
       if (error) {
-        if (error.status === 401) {
-          this.setStatus('unauthenticated');
-        } else {
-          this.lastError = error;
-          this.setStatus('error');
-        }
+        this.lastError = error;
+        this.setStatus('error');
       } else {
         this.jam = response.jam;
         this.setStatus('available');
@@ -171,12 +227,8 @@ HomeFeed = Component.extend({
       if (this.status !== 'fetchingHomeFeed') return; // we've moved on
 
       if (error) {
-        if (error.status === 401) {
-          this.setStatus('unauthenticated');
-        } else {
-          this.lastError = error;
-          this.setStatus('error');
-        }
+        this.lastError = error;
+        this.setStatus('error');
       } else {
         this.homeFeed = response;
         this.setStatus('homeFeed');
@@ -184,37 +236,18 @@ HomeFeed = Component.extend({
     }.bind(this));
   },
 
-  setStatus: function(status) {
-    this.status = status;
-    this.render();
-  },
-
   render: function() {
     this.element.toggle(this.status !== 'initial');
     this.element.empty();
 
     switch (this.status) {
-      case 'fetchingHomeFeed':
-        this.renderSpinner();
-        break;
       case 'homeFeed':
         this.renderHomeFeed();
-        break;
-      case 'unauthenticated':
-        this.renderSignInLink();
         break;
       case 'error':
         this.renderError();
         break;
     }
-  },
-
-  renderSpinner: function() {
-    var spinnerElement = $('<div/>').addClass('spinner-container').get(0);
-    var spinner = new Spinner();
-
-    this.element.append(spinnerElement);
-    spinner.spin(spinnerElement);
   },
 
   renderHomeFeed: function() {
@@ -237,18 +270,6 @@ HomeFeed = Component.extend({
     });
   },
 
-  renderSignInLink: function() {
-    var browser = this.browser;
-
-    $("<div/>")
-      .addClass("sign-in")
-      .html('You need to <a href="#">sign in</a>.')
-      .find('a').click(function() {
-        browser.createTab({url: this.api.baseWebURL});
-      })
-      .appendTo(this.element);
-  },
-
   renderError: function() {
     $("<div/>")
       .addClass("error")
@@ -259,8 +280,11 @@ HomeFeed = Component.extend({
 
 var Jamlet = chrome.extension.getBackgroundPage().Jamlet;
 
-new Popup({
+var popup = new Popup({
   element: $('#popup'),
   api:     Jamlet.API,
   browser: Jamlet.Browser
 });
+
+popup.render();
+popup.fetch();

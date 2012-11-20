@@ -3,19 +3,14 @@ Jamlet = {};
 Jamlet.API = {
   baseWebURL: 'http://www.thisismyjam.com',
   baseAPIURL: 'http://api.thisismyjam.com',
+  credentials: null,
 
   fetchHomeFeed: function(callback) {
-    this.authenticate(function(error, credentials) {
-      if (error) return callback(error);
-      this.apiRequest('/' + credentials.username + '/homeFeed.json', callback);
-    }.bind(this));
+    this.apiRequest('/' + this.credentials.username + '/homeFeed.json', callback);
   },
 
   fetchCurrentJam: function(callback) {
-    this.authenticate(function(error, credentials) {
-      if (error) return callback(error);
-      this.apiRequest('/' + credentials.username + '.json', callback);
-    }.bind(this));
+    this.apiRequest('/' + this.credentials.username + '.json', callback);
   },
 
   authenticate: function(callback) {
@@ -23,8 +18,9 @@ Jamlet.API = {
       url: this.baseWebURL + '/signin/credentials',
       dataType: 'json',
       success: function(response) {
+        this.credentials = response.credentials;
         callback(null, response.credentials);
-      },
+      }.bind(this),
       error: function(jqXHR, textStatus, errorThrown) {
         callback({status: jqXHR.status});
       }
