@@ -6,7 +6,8 @@ body {
 
 #popup {
   width: 320px;
-  height: 480px;
+  min-height: 60px;
+  max-height: 480px;
   overflow: auto;
 }
 
