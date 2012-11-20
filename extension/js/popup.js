@@ -28,32 +28,22 @@ Component.prototype = {
 
 Popup = Component.extend({
   initialize: function(options) {
-    this.createJam = new CreateJam({
-      element: $("<div/>").addClass("create-jam").appendTo(this.element),
-      api:     options.api,
-      browser: options.browser
+    this.addComponent(CreateJam,  "create-jam");
+    this.addComponent(CurrentJam, "current-jam");
+    this.addComponent(HomeFeed,   "home-feed");
+  },
+
+  addComponent: function(componentClass, cssClass) {
+    var component = new componentClass({
+      element: $("<div/>").addClass(cssClass).appendTo(this.element),
+      api:     this.options.api,
+      browser: this.options.browser
     });
 
-    this.createJam.render();
-    this.createJam.fetch();
+    component.render();
+    component.fetch();
 
-    this.currentJam = new CurrentJam({
-      element: $("<div/>").addClass("current-jam").appendTo(this.element),
-      api:     options.api,
-      browser: options.browser
-    });
-
-    this.currentJam.render();
-    this.currentJam.fetch();
-
-    this.homeFeed = new HomeFeed({
-      element: $("<div/>").addClass("home-feed").appendTo(this.element),
-      api:     options.api,
-      browser: options.browser
-    });
-
-    this.homeFeed.render();
-    this.homeFeed.fetch();
+    return component;
   }
 });
 
