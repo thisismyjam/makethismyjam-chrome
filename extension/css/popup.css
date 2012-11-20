@@ -7,6 +7,7 @@ body {
 #popup {
   width: 320px;
   height: 480px;
+  overflow: auto;
 }
 
 .spinner-container {
