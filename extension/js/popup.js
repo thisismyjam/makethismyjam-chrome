@@ -1,9 +1,33 @@
-Popup = {
-  init: function(options) {
-    this.element = options.element;
+function Component(options) {
+  if (options) {
+    this.element = $(options.element);
     this.api     = options.api;
     this.browser = options.browser;
-    
+
+    this.initialize(options);
+  }
+}
+
+Component.extend = function(extensions) {
+  var klass = function(options) {
+    Component.call(this, options);
+  };
+
+  klass.prototype = new Component();
+
+  for (var key in extensions)
+    if (extensions.hasOwnProperty(key))
+      klass.prototype[key] = extensions[key];
+
+  return klass;
+}
+
+Component.prototype = {
+  initialize: function(options) {}
+}
+
+Popup = Component.extend({
+  initialize: function(options) {
     this.createJam = new CreateJam({
       element: $("<div/>").addClass("create-jam").appendTo(this.element),
       api:     options.api,
@@ -31,15 +55,9 @@ Popup = {
     this.homeFeed.render();
     this.homeFeed.fetch();
   }
-};
+});
 
-function CreateJam(options) {
-  this.element = $(options.element);
-  this.api     = options.api;
-  this.browser = options.browser;
-}
-
-CreateJam.prototype = {
+CreateJam = Component.extend({
   createJamURL: null,
 
   fetch: function() {
@@ -97,23 +115,19 @@ CreateJam.prototype = {
       this.element.hide();
     }
   }
-}
+});
 
-function CurrentJam(options) {
-  this.element = $(options.element);
-  this.api     = options.api;
-  this.browser = options.browser;
-
-  this.element.click(function() {
-    if (this.jam) {
-      this.browser.createTab({url: this.jam.url});
-    }
-  }.bind(this));
-}
-
-CurrentJam.prototype = {
+CurrentJam = Component.extend({
   status: 'initial',
   jam: null,
+
+  initialize: function(options) {
+    this.element.click(function() {
+      if (this.jam) {
+        this.browser.createTab({url: this.jam.url});
+      }
+    }.bind(this));
+  },
 
   fetch: function() {
     this.setStatus('fetching');
@@ -154,15 +168,9 @@ CurrentJam.prototype = {
       if (this.jam.commentsCount > 0) $("<div/>").addClass("comments-count").text(this.jam.commentsCount).appendTo(this.element);
     }
   }
-};
+});
 
-function HomeFeed(options) {
-  this.element = $(options.element);
-  this.api     = options.api;
-  this.browser = options.browser;
-}
-
-HomeFeed.prototype = {
+HomeFeed = Component.extend({
   status: 'initial',
   homeFeed: null,
 
@@ -257,11 +265,11 @@ HomeFeed.prototype = {
       .text('Tragically, there was an HTTP ' + this.lastError.status + ' error. Sorry.')
       .appendTo(this.element);
   }
-};
+});
 
 var Jamlet = chrome.extension.getBackgroundPage().Jamlet;
 
-Popup.init({
+new Popup({
   element: $('#popup'),
   api:     Jamlet.API,
   browser: Jamlet.Browser
