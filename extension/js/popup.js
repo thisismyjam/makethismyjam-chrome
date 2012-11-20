@@ -59,8 +59,6 @@ Popup = Component.extend({
     this.setStatus('authenticating');
 
     this.api.authenticate(function(error, credentials) {
-      console.log(arguments);
-
       if (error) {
         this.setStatus('unauthenticated');
       } else {
