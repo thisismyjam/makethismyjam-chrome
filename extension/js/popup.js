@@ -289,6 +289,8 @@ HomeFeed = Component.extend({
 
 var Jamlet = chrome.extension.getBackgroundPage().Jamlet;
 
+Jamlet.lastOpenedPopup = new Date();
+
 var popup = new Popup({
   element: $('#popup'),
   api:     Jamlet.API,

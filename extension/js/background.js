@@ -1,4 +1,7 @@
-Jamlet = {};
+Jamlet = {
+  // TODO: clear badge when lastOpenedPopup is updated
+  lastOpenedPopup: null
+};
 
 Jamlet.API = {
   baseWebURL: 'http://www.thisismyjam.com',
@@ -89,7 +92,29 @@ Jamlet.HomeFeedChecker = new Jamlet.Checker({
   },
 
   callback: function(error, response) {
-    // TODO: check for new jams and update badge
+    var newJams;
+
+    if (Jamlet.lastOpenedPopup) {
+      newJams = response.jams.filter(function(jam) {
+        var creationDate = new Date();
+        creationDate.setTime(Date.parse(jam.creationDate));
+        return creationDate > Jamlet.lastOpenedPopup;
+      });
+    } else {
+      // temporary, while we're getting the full home feed back from the server.
+      // once we're only getting jams that are new since your last visit, this
+      // `else` clause can be removed.
+      newJams = [];
+    }
+
+    if (newJams.length > 0) {
+      Jamlet.Browser.updateBadge({
+        color: "#00ff00",
+        text:  String(newJams.length)
+      });
+    } else {
+      Jamlet.Browser.updateBadge({text: ""});
+    }
   }
 });
 
@@ -120,6 +145,14 @@ Jamlet.Browser = {
         return callback(null);
       }
     });
+  },
+
+  updateBadge: function(options) {
+    if (options.hasOwnProperty('color'))
+      chrome.browserAction.setBadgeBackgroundColor({color: options.color});
+
+    if (options.hasOwnProperty('text'))
+      chrome.browserAction.setBadgeText({text: options.text});
   }
 };
 
