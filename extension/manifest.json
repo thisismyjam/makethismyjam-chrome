@@ -10,6 +10,11 @@
     "background": {
         "scripts": [
             "js/jquery.js",
+            "js/classes/jamlet.js",
+            "js/classes/api.js",
+            "js/classes/browser.js",
+            "js/classes/checker.js",
+            "js/classes/home-feed-checker.js",
             "js/background.js"
         ]
     },
