@@ -48,6 +48,53 @@ Jamlet.API = {
   }
 };
 
+Jamlet.Checker = function(options) {
+  this.options  = options;
+  this.checkFn  = options.checkFn;
+  this.callback = options.callback;
+}
+
+Jamlet.Checker.prototype = {
+  timeBetweenChecks: 10*1000,
+  lastError: null,
+  lastResponse: null,
+
+  start: function() {
+    this.check(true);
+  },
+
+  check: function(reschedule) {
+    // TODO: handle timeout
+    this.checkFn(function(error, response) {
+      this.lastError    = error;
+      this.lastResponse = response;
+
+      if (this.callback) this.callback(error, response);
+
+      if (reschedule) {
+        window.setTimeout(function() {
+          this.check(true);
+        }.bind(this), this.timeBetweenChecks);
+      }
+    }.bind(this));
+  }
+};
+
+Jamlet.HomeFeedChecker = new Jamlet.Checker({
+  checkFn: function(callback) {
+    Jamlet.API.authenticate(function(error, response) {
+      if (!error)
+        Jamlet.API.fetchHomeFeed(callback);
+    });
+  },
+
+  callback: function(error, response) {
+    // TODO: check for new jams and update badge
+  }
+});
+
+Jamlet.HomeFeedChecker.start();
+
 Jamlet.Browser = {
   currentTab: null,
 
