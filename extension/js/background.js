@@ -58,7 +58,7 @@ Jamlet.Checker = function(options) {
 }
 
 Jamlet.Checker.prototype = {
-  timeBetweenChecks: 10*1000,
+  timeBetweenChecks: 5*60*1000,
   lastError: null,
   lastResponse: null,
 
