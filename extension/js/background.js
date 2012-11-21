@@ -13,7 +13,15 @@ Jamlet.API = {
     this.apiRequest('/' + this.credentials.username + '.json', callback);
   },
 
+  isAuthenticated: function() {
+    return !!this.credentials;
+  },
+
   authenticate: function(callback) {
+    if (this.isAuthenticated()) {
+      return callback(null, this.credentials);
+    }
+
     $.ajax({
       url: this.baseWebURL + '/signin/credentials',
       dataType: 'json',
