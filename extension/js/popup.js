@@ -1,33 +1,15 @@
-function Component(options) {
-  this.options = options;
+var Base = chrome.extension.getBackgroundPage().Base;
 
-  this.element = $(options.element);
-  this.api     = options.api;
-  this.browser = options.browser;
+Component = Base.extend({
+  initialize: function(options) {
+    this.element = $(options.element);
+    this.api     = options.api;
+    this.browser = options.browser;
 
-  if (this.cssClass) {
-    this.element.addClass(this.cssClass);
-  }
-
-  this.initialize(options);
-}
-
-Component.extend = function(extensions) {
-  var klass = function(options) {
-    Component.call(this, options);
-  };
-
-  klass.prototype = Object.create(Component.prototype);
-
-  for (var key in extensions)
-    if (extensions.hasOwnProperty(key))
-      klass.prototype[key] = extensions[key];
-
-  return klass;
-}
-
-Component.prototype = {
-  initialize: function(options) {},
+    if (this.cssClass) {
+      this.element.addClass(this.cssClass);
+    }
+  },
 
   setStatus: function(status) {
     this.status = status;
@@ -37,12 +19,14 @@ Component.prototype = {
   $: function(selector) {
     return $(selector, this.element);
   }
-}
+});
 
 Popup = Component.extend({
   status: 'initial',
 
   initialize: function(options) {
+    Component.prototype.initialize.call(this, options);
+
     ["authenticating", "unauthenticated", "available"].forEach(function(cssClass) {
       $("<div/>").addClass(cssClass).appendTo(this.element);
     }.bind(this));
@@ -180,6 +164,8 @@ CurrentJam = Component.extend({
   jam: null,
 
   initialize: function(options) {
+    Component.prototype.initialize.call(this, options);
+
     this.element.click(function() {
       if (this.jam) {
         this.browser.createTab({url: this.jam.url});
