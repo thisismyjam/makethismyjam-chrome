@@ -2,6 +2,7 @@ Jamlet.Badge = {
   initialize: function(options) {
     this.homeFeed = options.homeFeed;
     this.homeFeed.on('reset', this.updateBadge, this);
+    this.homeFeed.on('change:seen', this.updateBadge, this);
   },
 
   updateBadge: function() {

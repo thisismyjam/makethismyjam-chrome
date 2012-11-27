@@ -19,7 +19,6 @@ Popup = Backbone.Model.extend({
       } else {
         this.createJam.fetch();
         this.currentJam.fetch();
-        this.homeFeed.fetch();
 
         this.set({status: 'available'});
       }
@@ -220,7 +219,6 @@ CurrentJamView = Backbone.View.extend({
 HomeFeedView = Backbone.View.extend({
   initialize: function(options) {
     this.browser = options.browser;
-    this.model.on("change", this.render, this);
   },
 
   render: function() {
@@ -250,8 +248,6 @@ HomeFeedView = Backbone.View.extend({
 
 var Jamlet = chrome.extension.getBackgroundPage().Jamlet;
 
-Jamlet.LastOpenedPopup.set({lastTimestamp: new Date()});
-
 var popup = new Popup({
   api:     Jamlet.API,
   browser: Jamlet.Browser
@@ -265,3 +261,5 @@ var popupView = new PopupView({
 
 popupView.render();
 popup.fetch();
+
+Jamlet.LastOpenedPopup.set({lastTimestamp: new Date()});
