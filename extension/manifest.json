@@ -9,7 +9,7 @@
     },
     "background": {
         "scripts": [
-            "js/jquery.js",
+            "js/vendor/jquery.js",
             "js/classes/base.js",
             "js/classes/jamlet.js",
             "js/classes/api.js",
