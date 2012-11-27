@@ -5,7 +5,7 @@ Jamlet.HomeFeedCollection = Backbone.Collection.extend({
 
       Jamlet.API.fetchHomeFeed(function(error, response) {
         if (response) this.setJams(response.jams);
-        callback(error, response);
+        if (callback) callback(error, response);
       }.bind(this));
     }.bind(this));
   },
