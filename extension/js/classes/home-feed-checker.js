@@ -7,7 +7,9 @@ Jamlet.HomeFeedChecker = new Jamlet.Checker({
   },
 
   callback: function(error, response) {
-    var newJams;
+    var newJams = response.jams.filter(function(jam) {
+      return (jam.seen === false);
+    });
 
     if (Jamlet.lastOpenedPopup) {
       newJams = response.jams.filter(function(jam) {
@@ -15,11 +17,6 @@ Jamlet.HomeFeedChecker = new Jamlet.Checker({
         creationDate.setTime(Date.parse(jam.creationDate));
         return creationDate > Jamlet.lastOpenedPopup;
       });
-    } else {
-      // temporary, while we're getting the full home feed back from the server.
-      // once we're only getting jams that are new since your last visit, this
-      // `else` clause can be removed.
-      newJams = [];
     }
 
     if (newJams.length > 0) {
