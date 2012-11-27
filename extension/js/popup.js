@@ -250,7 +250,7 @@ HomeFeedView = Backbone.View.extend({
 
 var Jamlet = chrome.extension.getBackgroundPage().Jamlet;
 
-Jamlet.lastOpenedPopup = new Date();
+Jamlet.LastOpenedPopup.set({lastTimestamp: new Date()});
 
 var popup = new Popup({
   api:     Jamlet.API,

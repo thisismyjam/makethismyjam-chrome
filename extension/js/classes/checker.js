@@ -1,7 +1,5 @@
 Jamlet.Checker = function(options) {
-  this.options  = options;
-  this.checkFn  = options.checkFn;
-  this.callback = options.callback;
+  this.model = options.model;
 }
 
 Jamlet.Checker.prototype = {
@@ -15,11 +13,9 @@ Jamlet.Checker.prototype = {
 
   check: function(reschedule) {
     // TODO: handle timeout
-    this.checkFn(function(error, response) {
+    this.model.fetch(function(error, response) {
       this.lastError    = error;
       this.lastResponse = response;
-
-      if (this.callback) this.callback(error, response);
 
       if (reschedule) {
         window.setTimeout(function() {

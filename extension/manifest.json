@@ -17,7 +17,7 @@
             "js/classes/browser.js",
             "js/classes/checker.js",
             "js/classes/home-feed.js",
-            "js/classes/home-feed-checker.js",
+            "js/classes/badge.js",
             "js/background.js"
         ]
     },
