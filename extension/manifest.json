@@ -10,7 +10,8 @@
     "background": {
         "scripts": [
             "js/vendor/jquery.js",
-            "js/classes/base.js",
+            "js/vendor/underscore.js",
+            "js/vendor/backbone.js",
             "js/classes/jamlet.js",
             "js/classes/api.js",
             "js/classes/browser.js",

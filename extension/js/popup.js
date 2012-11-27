@@ -1,110 +1,44 @@
-var Base = chrome.extension.getBackgroundPage().Base;
-
-Component = Base.extend({
+Popup = Backbone.Model.extend({
   initialize: function(options) {
-    this.element = $(options.element);
     this.api     = options.api;
     this.browser = options.browser;
 
-    if (this.cssClass) {
-      this.element.addClass(this.cssClass);
-    }
-  },
+    this.set({status: 'initial'});
 
-  setStatus: function(status) {
-    this.status = status;
-    this.render();
-  },
-
-  $: function(selector) {
-    return $(selector, this.element);
-  }
-});
-
-Popup = Component.extend({
-  status: 'initial',
-
-  initialize: function(options) {
-    Component.prototype.initialize.call(this, options);
-
-    ["authenticating", "unauthenticated", "available"].forEach(function(cssClass) {
-      $("<div/>").addClass(cssClass).appendTo(this.element);
-    }.bind(this));
-
-    this.loading    = this.addComponent(Loading,    ".authenticating");
-    this.signIn     = this.addComponent(SignIn,     ".unauthenticated");
-
-    this.createJam  = this.addComponent(CreateJam,  ".available");
-    this.currentJam = this.addComponent(CurrentJam, ".available");
-    this.homeFeed   = this.addComponent(HomeFeed,   ".available");
+    this.createJam  = new CreateJam({api: this.api, browser: this.browser});
+    this.currentJam = new CurrentJam({api: this.api});
+    this.homeFeed   = Jamlet.HomeFeed;
   },
 
   fetch: function() {
-    this.setStatus('authenticating');
+    this.set({status: 'authenticating'});
 
     this.api.authenticate(function(error, credentials) {
       if (error) {
-        this.setStatus('unauthenticated');
+        this.set({status: 'unauthenticated'});
       } else {
         this.createJam.fetch();
         this.currentJam.fetch();
         this.homeFeed.fetch();
 
-        this.setStatus('available');
+        this.set({status: 'available'});
       }
     }.bind(this));
-  },
-
-  render: function() {
-    this.element.children().hide();
-    this.element.children("." + this.status).show();
-  },
-
-  addComponent: function(componentClass, appendToSelector) {
-    var component = new componentClass({
-      element: $("<div/>").appendTo(this.$(appendToSelector)),
-      api:     this.options.api,
-      browser: this.options.browser
-    });
-
-    component.render();
-
-    return component;
   }
 });
 
-Loading = Component.extend({
-  cssClass: 'loading',
-
-  render: function() {
-    this.element.empty();
-    new Spinner().spin(this.element.get(0));
-  }
-});
-
-SignIn = Component.extend({
-  cssClass: 'sign-in',
-
-  render: function() {
-    var browser   = this.browser;
-    var signInURL = this.api.baseWebURL;
-
-    this.element.html('You need to <a href="#">sign in</a>.');
-
-    this.$('a').click(function() {
-      browser.createTab({url: signInURL});
-    });
-  }
-});
-
-CreateJam = Component.extend({
-  cssClass: 'create-jam',
+CreateJam = Backbone.Model.extend({
   createJamURL: null,
+
+  initialize: function(options) {
+    this.api = options.api;
+    this.browser = options.browser;
+  },
 
   fetch: function() {
     this.browser.fetchCurrentTabURL(function(url) {
       if (url && this.isPotentiallyJammable(url)) {
-        this.setCreateJamURL(this.makeCreateJamURL(url));
+        this.set('url', this.makeCreateJamURL(url));
       }
     }.bind(this));
   },
@@ -135,141 +69,182 @@ CreateJam = Component.extend({
 
   makeCreateJamURL: function(url) {
     return this.api.baseWebURL + '/jam/create?signin=1&source=jamlet&url=' + encodeURIComponent(url);
-  },
-
-  setCreateJamURL: function(url) {
-    this.createJamURL = url;
-    this.render();
-  },
-
-  render: function() {
-    if (this.createJamURL) {
-      var url = this.createJamURL;
-      var browser = this.browser;
-
-      var button = $("<button/>")
-        .text("Make this my jam")
-        .click(function() { browser.createTab({url: url}) });
-
-      this.element.show().append(button);
-    } else {
-      this.element.hide();
-    }
   }
 });
 
-CurrentJam = Component.extend({
-  cssClass: 'current-jam',
-  status: 'initial',
-  jam: null,
-
+CurrentJam = Backbone.Model.extend({
   initialize: function(options) {
-    Component.prototype.initialize.call(this, options);
-
-    this.element.click(function() {
-      if (this.jam) {
-        this.browser.createTab({url: this.jam.url});
-      }
-    }.bind(this));
+    this.api = options.api;
+    this.set({status: 'initial'});
   },
 
   fetch: function() {
-    this.setStatus('fetching');
+    this.set({status: 'fetching'});
 
     this.api.fetchCurrentJam(function(error, response) {
-      if (this.status !== 'fetching') return; // we've moved on
+      if (this.get('status') !== 'fetching') return; // we've moved on
 
       if (error) {
-        this.lastError = error;
-        this.setStatus('error');
+        this.set({status: 'error', lastError: error});
       } else {
-        this.jam = response.jam;
-        this.setStatus('available');
+        this.set(response.jam);
+        this.set({status: 'available'});
       }
     }.bind(this));
-  },
+  }
+});
 
-  setStatus: function(status) {
-    this.status = status;
-    this.render();
+PopupView = Backbone.View.extend({
+  initialize: function(options) {
+    this.browser = options.browser;
+
+    ["authenticating", "unauthenticated", "available"].forEach(function(className) {
+      $("<div/>").addClass(className).appendTo(this.el);
+    }.bind(this));
+
+    this.loading    = this.addComponent(LoadingView,    ".authenticating");
+    this.signIn     = this.addComponent(SignInView,     ".unauthenticated");
+
+    this.createJam  = this.addComponent(CreateJamView,  ".available", {model: this.model.createJam});
+    this.currentJam = this.addComponent(CurrentJamView, ".available", {model: this.model.currentJam});
+    this.homeFeed   = this.addComponent(HomeFeedView,   ".available", {model: this.model.homeFeed});
+
+    this.model.on("change", this.render, this);
   },
 
   render: function() {
-    this.element
+    $(this.el).children().hide();
+    $(this.el).children("." + this.model.get('status')).show();
+  },
+
+  addComponent: function(componentClass, appendToSelector, options) {
+    options = options || {};
+
+    _.extend(options, {
+      el: $("<div/>").appendTo(this.$(appendToSelector)),
+      browser: this.browser
+    });
+
+    var component = new componentClass(options);
+    component.render();
+    return component;
+  }
+});
+
+LoadingView = Backbone.View.extend({
+  render: function() {
+    $(this.el).addClass('loading').empty();
+    new Spinner().spin(this.el);
+  }
+});
+
+SignInView = Backbone.View.extend({
+  events: {
+    "click a": "openSignInPage"
+  },
+
+  initialize: function(options) {
+    this.browser = options.browser
+  },
+
+  render: function() {
+    $(this.el).addClass('sign-in').html('You need to <a href="#">sign in</a>.');
+  },
+
+  openSignInPage: function() {
+    this.browser.createTab({url: this.api.baseWebURL});
+  }
+});
+
+CreateJamView = Backbone.View.extend({
+  events: {
+    "click button": "openCreateJamPage"
+  },
+
+  initialize: function(options) {
+    this.browser = options.browser;
+    this.model.on("change", this.render, this);
+  },
+
+  render: function() {
+    console.log("this.model", this.model);
+    console.log("this.model.get('url')", this.model.get('url'));
+
+    $(this.el)
+      .addClass('create-jam')
+      .html("<button>Make this my jam</button>")
+      .toggle(_.isString(this.model.get('url')));
+  },
+
+  openCreateJamPage: function() {
+    this.browser.createTab({url: this.model.get('url')});
+  }
+});
+
+CurrentJamView = Backbone.View.extend({
+  events: {
+    "click": "openJam"
+  },
+
+  initialize: function(options) {
+    this.browser = options.browser;
+    this.model.on("change", this.render, this);
+  },
+
+  render: function() {
+    var jam    = this.model;
+    var status = this.model.get('status');
+
+    $(this.el)
+      .addClass('current-jam')
       .empty()
-      .attr("data-status", this.status);
+      .attr("data-status", status);
 
-    if (this.status === 'available') {
-      $("<div/>").addClass("title").text(this.jam.title).appendTo(this.element);
-      $("<div/>").addClass("artist").text(this.jam.artist).appendTo(this.element);
+    if (status === 'available') {
+      $("<div/>").addClass("title").text(jam.get('title')).appendTo(this.el);
+      $("<div/>").addClass("artist").text(jam.get('artist')).appendTo(this.el);
 
-      if (this.jam.playCount     > 0) $("<div/>").addClass("play-count").text(this.jam.playCount).appendTo(this.element);
-      if (this.jam.likesCount    > 0) $("<div/>").addClass("likes-count").text(this.jam.likesCount).appendTo(this.element);
-      if (this.jam.commentsCount > 0) $("<div/>").addClass("comments-count").text(this.jam.commentsCount).appendTo(this.element);
+      if (jam.get('playCount')     > 0) $("<div/>").addClass("play-count").text(jam.get('playCount')).appendTo(this.el);
+      if (jam.get('likesCount')    > 0) $("<div/>").addClass("likes-count").text(jam.get('likesCount')).appendTo(this.el);
+      if (jam.get('commentsCount') > 0) $("<div/>").addClass("comments-count").text(jam.get('commentsCount')).appendTo(this.el);
+    }
+  },
+
+  openJam: function() {
+    if (this.model.get('url')) {
+      this.browser.createTab({url: this.model.get('url')});
     }
   }
 });
 
-HomeFeed = Component.extend({
-  cssClass: 'home-feed',
-  status: 'initial',
-  homeFeed: null,
-
-  fetch: function() {
-    this.setStatus('fetchingHomeFeed');
-
-    this.api.fetchHomeFeed(function(error, response) {
-      if (this.status !== 'fetchingHomeFeed') return; // we've moved on
-
-      if (error) {
-        this.lastError = error;
-        this.setStatus('error');
-      } else {
-        this.homeFeed = response;
-        this.setStatus('homeFeed');
-      }
-    }.bind(this));
+HomeFeedView = Backbone.View.extend({
+  initialize: function(options) {
+    this.browser = options.browser;
+    this.model.on("change", this.render, this);
   },
 
   render: function() {
-    this.element.toggle(this.status !== 'initial');
-    this.element.empty();
-
-    switch (this.status) {
-      case 'homeFeed':
-        this.renderHomeFeed();
-        break;
-      case 'error':
-        this.renderError();
-        break;
-    }
-  },
-
-  renderHomeFeed: function() {
-    var element = this.element;
+    var element = this.el;
     var browser = this.browser;
 
-    $.each(this.homeFeed.jams, function() {
-      var jam = this;
+    $(element)
+      .addClass('home-feed')
+      .empty()
+      .toggle(this.model.models.length > 0);
+
+    _.each(this.model.models, function(jam) {
       var item = $("<div/>").addClass('jam');
 
-      $("<div/>").addClass("jamvatar").append($("<img/>").attr("src", jam.jamvatarSmall)).appendTo(item);
+      $("<div/>").addClass("jamvatar").append($("<img/>").attr("src", jam.get('jamvatarSmall'))).appendTo(item);
 
       var info = $("<div/>").addClass('info').appendTo(item);
-      $("<div/>").addClass("title").text(jam.title).appendTo(info);
-      $("<div/>").addClass("artist").text(jam.artist).appendTo(info);
-      $("<div/>").addClass("username").text('@' + jam.from).appendTo(info);
+      $("<div/>").addClass("title").text(jam.get('title')).appendTo(info);
+      $("<div/>").addClass("artist").text(jam.get('artist')).appendTo(info);
+      $("<div/>").addClass("username").text('@' + jam.get('from')).appendTo(info);
 
-      item.click(function() { browser.createTab({url: jam.url}); });
+      item.click(function() { browser.createTab({url: jam.get('url')}); });
       item.appendTo(element);
     });
-  },
-
-  renderError: function() {
-    $("<div/>")
-      .addClass("error")
-      .text('Tragically, there was an HTTP ' + this.lastError.status + ' error. Sorry.')
-      .appendTo(this.element);
   }
 });
 
@@ -278,10 +253,15 @@ var Jamlet = chrome.extension.getBackgroundPage().Jamlet;
 Jamlet.lastOpenedPopup = new Date();
 
 var popup = new Popup({
-  element: $('#popup'),
   api:     Jamlet.API,
   browser: Jamlet.Browser
 });
 
-popup.render();
+var popupView = new PopupView({
+  el:      $('#popup'),
+  model:   popup,
+  browser: Jamlet.Browser
+})
+
+popupView.render();
 popup.fetch();

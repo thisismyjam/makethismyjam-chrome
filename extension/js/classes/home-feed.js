@@ -1,12 +1,10 @@
-Jamlet.HomeFeed = {
-  jams: null,
-
+Jamlet.HomeFeedCollection = Backbone.Collection.extend({
   fetch: function(callback) {
     Jamlet.API.authenticate(function(error, response) {
       if (error) return;
 
       Jamlet.API.fetchHomeFeed(function(error, response) {
-        this.setJams(response.jams);
+        if (response) this.setJams(response.jams);
         callback(error, response);
       }.bind(this));
     }.bind(this));
@@ -15,23 +13,23 @@ Jamlet.HomeFeed = {
   setJams: function(jams) {
     if (Jamlet.lastOpenedPopup) {
       jams.forEach(function(jam) {
-        var creationDate = new Date();
-        creationDate.setTime(Date.parse(jam.creationDate));
-        
-        if (creationDate <= Jamlet.lastOpenedPopup) {
-          jam.seen = true;
+        if (jam.get('seen') === false) {
+          var creationDate = new Date();
+          creationDate.setTime(Date.parse(jam.get('creationDate')));
+          
+          if (creationDate <= Jamlet.lastOpenedPopup) {
+            jam.set({seen: true});
+          }
         }
       });
     }
 
-    this.jams = jams;
-  },
-
-  getJams: function() {
-    return this.jams;
+    this.reset(jams);
   },
 
   getUnseenJamCount: function() {
-    return this.getJams().filter(function(jam) { return jam.seen === false }).length;
+    return this.models.filter(function(jam) { return jam.get('seen') === false }).length;
   }
-}
+});
+
+Jamlet.HomeFeed = new Jamlet.HomeFeedCollection();
