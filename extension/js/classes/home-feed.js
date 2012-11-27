@@ -6,19 +6,21 @@ Jamlet.HomeFeedCollection = Backbone.Collection.extend({
   },
 
   fetch: function(options) {
+    var collection = this;
+
     Jamlet.API.authenticate(function(error, response) {
       if (error) return;
 
       Jamlet.API.fetchHomeFeed(function(error, response) {
         if (response) {
-          this.reset(response.jams);
+          collection.reset(response.jams);
 
           if (options.success) {
-            options.success(this, response, {});
+            options.success(collection, response, {});
           }
         }
-      }.bind(this));
-    }.bind(this));
+      });
+    });
   },
 
   filterJams: function(jams) {
