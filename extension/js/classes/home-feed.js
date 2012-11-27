@@ -16,7 +16,7 @@ Jamlet.HomeFeedCollection = Backbone.Collection.extend({
         var creationDate = new Date();
         creationDate.setTime(Date.parse(jam.creationDate));
         
-        if (creationDate <= Jamlet.lastOpenedPopup) {
+        if (creationDate < Jamlet.lastOpenedPopup) {
           jam.seen = true;
         }
       });
