@@ -5,13 +5,18 @@ Jamlet.HomeFeedCollection = Backbone.Collection.extend({
     this.on('reset', this.filterJams, this);
   },
 
-  fetch: function(callback) {
+  fetch: function(options) {
     Jamlet.API.authenticate(function(error, response) {
       if (error) return;
 
       Jamlet.API.fetchHomeFeed(function(error, response) {
-        if (response) this.reset(response.jams);
-        if (callback) callback(error, response);
+        if (response) {
+          this.reset(response.jams);
+
+          if (options.success) {
+            options.success(this, response, {});
+          }
+        }
       }.bind(this));
     }.bind(this));
   },

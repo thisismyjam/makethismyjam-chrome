@@ -13,15 +13,16 @@ Jamlet.Checker.prototype = {
 
   check: function(reschedule) {
     // TODO: handle timeout
-    this.model.fetch(function(error, response) {
-      this.lastError    = error;
-      this.lastResponse = response;
+    this.model.fetch({
+      success: function(_, response) {
+        this.lastResponse = response;
 
-      if (reschedule) {
-        window.setTimeout(function() {
-          this.check(true);
-        }.bind(this), this.timeBetweenChecks);
-      }
-    }.bind(this));
+        if (reschedule) {
+          window.setTimeout(function() {
+            this.check(true);
+          }.bind(this), this.timeBetweenChecks);
+        }
+      }.bind(this)
+    });
   }
 };
