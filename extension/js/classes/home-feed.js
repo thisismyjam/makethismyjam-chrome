@@ -13,13 +13,11 @@ Jamlet.HomeFeedCollection = Backbone.Collection.extend({
   setJams: function(jams) {
     if (Jamlet.lastOpenedPopup) {
       jams.forEach(function(jam) {
-        if (jam.get('seen') === false) {
-          var creationDate = new Date();
-          creationDate.setTime(Date.parse(jam.get('creationDate')));
-          
-          if (creationDate <= Jamlet.lastOpenedPopup) {
-            jam.set({seen: true});
-          }
+        var creationDate = new Date();
+        creationDate.setTime(Date.parse(jam.creationDate));
+        
+        if (creationDate <= Jamlet.lastOpenedPopup) {
+          jam.seen = true;
         }
       });
     }
