@@ -1,6 +1,7 @@
 Jamlet.API = {
   baseWebURL: 'http://www.thisismyjam.com',
   baseAPIURL: 'http://api.thisismyjam.com',
+  apiKey: '80403541f0349e10305d0021e8bc0c7d',
   credentials: null,
 
   fetchHomeFeed: function(callback) {
@@ -36,6 +37,7 @@ Jamlet.API = {
   apiRequest: function(path, callback) {
     $.ajax({
       url: this.baseAPIURL + '/1' + path,
+      data: {key: this.apiKey},
       success: function(data) {
         callback(null, data);
       },
