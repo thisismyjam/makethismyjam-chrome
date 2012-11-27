@@ -81,6 +81,10 @@ body {
   overflow: hidden;
 }
 
+.jam[data-seen="false"] {
+  background: #ffd;
+}
+
 .jam .jamvatar {
   width: 80px;
   height: 80px;

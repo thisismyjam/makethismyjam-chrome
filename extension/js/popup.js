@@ -233,7 +233,7 @@ HomeFeedView = Backbone.View.extend({
       .toggle(this.model.models.length > 0);
 
     _.each(this.model.models, function(jam) {
-      var item = $("<div/>").addClass('jam');
+      var item = $("<div/>").addClass('jam').attr('data-seen', String(jam.get('seen')));
 
       $("<div/>").addClass("jamvatar").append($("<img/>").attr("src", jam.get('jamvatarSmall'))).appendTo(item);
 
