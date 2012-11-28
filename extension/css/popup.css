@@ -54,6 +54,7 @@ body {
 .current-jam[data-status="available"] {
   display: block;
   position: fixed;
+  z-index: 1;
   left: 0;
   right: 0;
   bottom: 0;
@@ -118,8 +119,7 @@ body {
 }
 
 .home-feed .jam {
-  padding: 6px;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid #e9e9e9;
   cursor: pointer;
 }
 
@@ -140,15 +140,29 @@ body {
 
 .jam {
   overflow: hidden;
+  font-size: 13px;
+  position: relative;
+  padding: 15px 18px 11px;
 }
 
 .jam[data-seen="false"] {
-  background: #ffd;
+  background: #ffffeb;
+}
+
+.jam .timestamp {
+  position: absolute;
+  top: 15px;
+  right: 18px;
+  font-size: 10px;
+  color: #a6a6a6;
+}
+
+.jam .jamvatar, .jam .jamvatar img {
+  width: 50px;
+  height: 50px;
 }
 
 .jam .jamvatar {
-  width: 80px;
-  height: 80px;
   float: left;
   margin-right: 6px;
 }
@@ -157,10 +171,8 @@ body {
   overflow: hidden;
 }
 
-.jam .title {
+.jam .user {
   font-weight: bold;
-}
-
-.jam .username {
-  color: #bbb;
+  line-height: 12px;
+  margin-bottom: 4px;
 }

@@ -310,19 +310,36 @@ HomeFeedView = Backbone.View.extend({
       $(this.el).html("<div class='no-jams'>No jams from people you follow. Why not find more people to get music from?</div>");
     }
 
-    _.each(this.model.models, function(jam) {
-      var item = $("<div/>").addClass('jam').attr('data-seen', String(jam.get('seen')));
+    _.each(this.model.models, function(model) {
+      var jam = model.toJSON();
+      var item = $("<div/>").addClass('jam').attr('data-seen', String(jam.seen));
 
-      $("<div/>").addClass("jamvatar").append($("<img/>").attr("src", jam.get('jamvatarSmall'))).appendTo(item);
+      $("<div/>").addClass("jamvatar").append($("<img/>").attr("src", jam.jamvatarSmall)).appendTo(item);
+      $("<div/>").addClass("timestamp").text(formatTimestamp(jam.creationDate) + " ago").appendTo(item);
 
       var info = $("<div/>").addClass('info').appendTo(item);
-      $("<div/>").addClass("title").text(jam.get('title')).appendTo(info);
-      $("<div/>").addClass("artist").text(jam.get('artist')).appendTo(info);
-      $("<div/>").addClass("username").text('@' + jam.get('from')).appendTo(info);
 
-      item.click(function() { browser.createTab({url: jam.get('url')}); });
+      $("<div/>").addClass("user").text(jam.from + '\u2019s jam').appendTo(info);
+      $("<div/>").addClass("song").text(jam.title + ' by ' + jam.artist).appendTo(info);
+
+      item.click(function() { browser.createTab({url: jam.url}); });
       item.appendTo(element);
     });
+
+    function formatTimestamp(dateString) {
+      var duration = moment.duration(moment().diff(moment(dateString)));
+      var components = [];
+
+      _.each(['years', 'months', 'days', 'hours', 'minutes'], function(unit) {
+        var value = duration[unit]();
+
+        if (value) {
+          components.push(value + unit[0]);
+        }
+      });
+
+      return components.slice(-2).join(", ");
+    }
   }
 });
 
