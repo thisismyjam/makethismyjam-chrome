@@ -18,7 +18,7 @@ body {
   display: none;
 }
 
-.create-jam[data-has-url="true"] {
+.create-jam[data-jammable="true"] {
   display: block;
   padding: 12px;
   text-align: center;

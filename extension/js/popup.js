@@ -124,9 +124,9 @@ CreateJamView = Backbone.View.extend({
     $(this.el)
       .addClass('create-jam')
       .empty()
-      .attr('data-has-url', this.hasURL());
+      .attr('data-jammable', this.isJammable());
 
-    if (this.hasURL()) {
+    if (this.isJammable()) {
       var type = this.model.get('type');
       type = type[0].toUpperCase() + type.substring(1).toLowerCase();
 
@@ -139,13 +139,13 @@ CreateJamView = Backbone.View.extend({
   },
 
   openCreateJamPage: function() {
-    if (this.hasURL()) {
+    if (this.isJammable()) {
       this.browser.createTab({url: this.model.get('url')});
     }
   },
 
-  hasURL: function() {
-    return _.isString(this.model.get('url'));
+  isJammable: function() {
+    return this.model.get('jammable');
   }
 });
 
