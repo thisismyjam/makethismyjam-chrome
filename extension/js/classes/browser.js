@@ -2,7 +2,13 @@ Jamlet.Browser = {
   currentTab: null,
 
   init: function() {
-    chrome.tabs.onActivated.addListener(this.tabActivated.bind(this));
+    this.onTabActivated(this.tabActivated.bind(this));
+  },
+
+  onTabActivated: function(callback) {
+    chrome.tabs.onActivated.addListener(function(tabInfo) {
+      this.fetchTab(tabInfo.tabId, callback);
+    }.bind(this));
   },
 
   tabActivated: function(tab) {
@@ -15,8 +21,11 @@ Jamlet.Browser = {
 
   fetchCurrentTab: function(callback) {
     if (!this.currentTab) return callback(null);
+    this.fetchTab(this.currentTab.tabId, callback);
+  },
 
-    chrome.tabs.get(this.currentTab.tabId, function(tab) {
+  fetchTab: function(tabId, callback) {
+    chrome.tabs.get(tabId, function(tab) {
       if (tab) {
         return callback({
           url:   tab.url,
@@ -34,5 +43,9 @@ Jamlet.Browser = {
 
     if (options.hasOwnProperty('text'))
       chrome.browserAction.setBadgeText({text: options.text});
+  },
+
+  setToolbarIconPath: function(path) {
+    chrome.browserAction.setIcon({path: path});
   }
 };
