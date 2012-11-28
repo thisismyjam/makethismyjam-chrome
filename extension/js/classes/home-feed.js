@@ -24,6 +24,12 @@ Jamlet.HomeFeedCollection = Backbone.Collection.extend({
   },
 
   filterJams: function(jams) {
+    var myJam = this.find(function(jam) {
+      return jam.get('from') === Jamlet.API.credentials.username;
+    });
+
+    if (myJam) this.remove(myJam);
+
     var timestamp = this.timeKeeper.get('lastTimestamp');
 
     if (timestamp) {
