@@ -85,9 +85,11 @@ CurrentJam = Backbone.Model.extend({
 
       if (error) {
         this.set({status: 'error', lastError: error});
-      } else {
+      } else if (response.jam) {
         this.set(response.jam);
         this.set({status: 'available'});
+      } else {
+        this.set({status: 'no-jam'});
       }
     }.bind(this));
   }
