@@ -328,17 +328,26 @@ HomeFeedView = Backbone.View.extend({
 
     function formatTimestamp(dateString) {
       var duration = moment.duration(moment().diff(moment(dateString)));
-      var components = [];
+      var days     = duration.days();
 
-      _.each(['years', 'months', 'days', 'hours', 'minutes'], function(unit) {
-        var value = duration[unit]();
+      if (days > 1) {
+        return days + " days";
+      } else if (days == 1) {
+        return "1 day";
+      } else {
+        var components = [];
+        var hours = duration.hours();
+        var mins = duration.minutes();
 
-        if (value) {
-          components.push(value + unit[0]);
+        if (hours > 0) components.push(hours + "h");
+        if (mins > 0)  components.push(mins + " min");
+
+        if (components.length > 0) {
+          return components.join(", ");
+        } else {
+          return "just now";
         }
-      });
-
-      return components.slice(-2).join(", ");
+      }
     }
   }
 });
