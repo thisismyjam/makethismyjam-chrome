@@ -230,8 +230,11 @@ HomeFeedView = Backbone.View.extend({
 
     $(element)
       .addClass('home-feed')
-      .empty()
-      .toggle(this.model.models.length > 0);
+      .empty();
+
+    if (this.model.models.length === 0) {
+      $(this.el).html("<div class='no-jams'>No jams.</div>");
+    }
 
     _.each(this.model.models, function(jam) {
       var item = $("<div/>").addClass('jam').attr('data-seen', String(jam.get('seen')));

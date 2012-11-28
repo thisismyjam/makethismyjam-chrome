@@ -82,6 +82,13 @@ body {
   background: #eee;
 }
 
+.no-jams {
+  text-align: center;
+  margin: 12px;
+  font-size: 13px;
+  color: #bbb;
+}
+
 .jam {
   overflow: hidden;
 }
