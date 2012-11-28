@@ -263,7 +263,7 @@ CurrentJamView = Backbone.View.extend({
 
         var info = $("<div/>").addClass("info").appendTo(this.el);
 
-        $("<div/>").addClass("title").text("Your current jam: " + jam.title + " by " + jam.artist).appendTo(info);
+        $("<div/>").addClass("title").text("Your jam: " + jam.title + " by " + jam.artist).appendTo(info);
 
         var stats = $("<div/>").addClass("stats").appendTo(info);
 

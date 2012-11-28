@@ -5,7 +5,7 @@ body {
 }
 
 #popup {
-  width: 320px;
+  width: 330px;
 }
 
 .loading {
@@ -51,8 +51,8 @@ body {
 .current-jam[data-status="available"] {
   display: block;
 
-  padding: 12px 16px;
-  background: #808080;
+  padding: 10px 10px 8px;
+  background: #eee;
   border-top: 1px solid #696969;
   font-size: 13px;
 }
@@ -136,7 +136,7 @@ body {
   overflow: hidden;
   font-size: 13px;
   position: relative;
-  padding: 15px 18px 11px;
+  padding: 10px;
 }
 
 .jam[data-seen="false"] {
@@ -145,9 +145,10 @@ body {
 
 .jam .timestamp {
   position: absolute;
-  top: 15px;
-  right: 18px;
+  top: 10px;
+  right: 10px;
   font-size: 10px;
+  line-height: 10px;
   color: #a6a6a6;
 }
 
@@ -163,10 +164,11 @@ body {
 
 .jam .info {
   overflow: hidden;
+  line-height: 17px;
 }
 
 .jam .user {
   font-weight: bold;
-  line-height: 12px;
+  line-height: 10px;
   margin-bottom: 4px;
 }
