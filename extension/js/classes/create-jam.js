@@ -34,8 +34,14 @@ Jamlet.CreateJamModel = Backbone.Model.extend({
       case 'youtube':
         return title.replace(/\s+-\s+youtube\b.*/i, '');
 
+      case 'vimeo':
+        return title.replace(/\s+(on\s+)?vimeo\b.*/i, '');
+
+      case 'officialfm':
+        return title.replace(/\s+(on\s+)?official\.fm\b.*/i, '');
+
       case 'soundcloud':
-        return title.replace(/\s+(on\s+)?soundcloud\s+.*/i, '');
+        return title.replace(/\s+(on\s+)?soundcloud\b.*/i, '');
 
       case 'found':
         return (title.match(/[^\/]+$/) || [title])[0];
@@ -63,6 +69,14 @@ Jamlet.CreateJamModel = Backbone.Model.extend({
     // YouTube watch page
     if (url.match(/^(https?:\/\/)?(www\.)?youtube\.com\/watch.+/i))
       return 'youtube';
+
+    // Vimeo video page
+    if (url.match(/^(https?:\/\/)?(www\.)?vimeo.com\/(.+\/)?([0-9]+)($|\?|#)/i))
+      return 'vimeo';
+
+    // Official.fm track page
+    if (url.match(/^(https?:\/\/)?(www\.)?official\.fm\/tracks\/.+(\?|#|\/|$)/))
+      return 'officialfm';
     
     // Potential SoundCloud track page (TODO: Introspect page to make sure?)
     if (url.match(/^(https?:\/\/)?(www\.)?soundcloud\.com\/[^\/]+\/[^\/]+/i))
