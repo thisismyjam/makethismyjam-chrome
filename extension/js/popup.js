@@ -315,7 +315,7 @@ HomeFeedView = Backbone.View.extend({
       var item = $("<div/>").addClass('jam').attr('data-seen', String(jam.seen));
 
       $("<div/>").addClass("jamvatar").append($("<img/>").attr("src", jam.jamvatarSmall)).appendTo(item);
-      $("<div/>").addClass("timestamp").text(formatTimestamp(jam.creationDate) + " ago").appendTo(item);
+      $("<div/>").addClass("timestamp").text(formatTimestamp(jam.creationDate)).appendTo(item);
 
       var info = $("<div/>").addClass('info').appendTo(item);
 
@@ -331,9 +331,9 @@ HomeFeedView = Backbone.View.extend({
       var days     = duration.days();
 
       if (days > 1) {
-        return days + " days";
+        return days + " days ago";
       } else if (days == 1) {
-        return "1 day";
+        return "1 day ago";
       } else {
         var components = [];
         var hours = duration.hours();
@@ -343,7 +343,7 @@ HomeFeedView = Backbone.View.extend({
         if (mins > 0)  components.push(mins + " min");
 
         if (components.length > 0) {
-          return components.join(", ");
+          return components.join(", ") + " ago";
         } else {
           return "just now";
         }
