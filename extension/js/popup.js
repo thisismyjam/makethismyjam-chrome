@@ -296,6 +296,7 @@ CurrentJamView = Backbone.View.extend({
 HomeFeedView = Backbone.View.extend({
   initialize: function(options) {
     this.browser = options.browser;
+    this.model.bind("reset", this.render, this);
   },
 
   render: function() {
