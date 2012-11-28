@@ -144,8 +144,8 @@ PopupView = Backbone.View.extend({
     this.signIn     = this.addComponent(SignInView,     ".unauthenticated");
 
     this.createJam  = this.addComponent(CreateJamView,  ".available", {model: this.model.createJam});
-    this.currentJam = this.addComponent(CurrentJamView, ".available", {model: this.model.currentJam});
     this.homeFeed   = this.addComponent(HomeFeedView,   ".available", {model: this.model.homeFeed});
+    this.currentJam = this.addComponent(CurrentJamView, ".available", {model: this.model.currentJam});
 
     this.model.on("change", this.render, this);
   },
