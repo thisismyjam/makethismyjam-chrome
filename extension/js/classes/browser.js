@@ -13,12 +13,15 @@ Jamlet.Browser = {
     chrome.tabs.create(options);
   },
 
-  fetchCurrentTabURL: function(callback) {
+  fetchCurrentTab: function(callback) {
     if (!this.currentTab) return callback(null);
 
     chrome.tabs.get(this.currentTab.tabId, function(tab) {
       if (tab) {
-        return callback(tab.url);
+        return callback({
+          url:   tab.url,
+          title: tab.title
+        });
       } else {
         return callback(null);
       }

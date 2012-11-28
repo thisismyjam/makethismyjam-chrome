@@ -35,9 +35,10 @@ CreateJam = Backbone.Model.extend({
   },
 
   fetch: function() {
-    this.browser.fetchCurrentTabURL(function(url) {
-      if (url && this.isPotentiallyJammable(url)) {
-        this.set('url', this.makeCreateJamURL(url));
+    this.browser.fetchCurrentTab(function(tab) {
+      if (tab && this.isPotentiallyJammable(tab.url)) {
+        this.set('url', this.makeCreateJamURL(tab.url));
+        this.set('title', this.getJamTitle(tab));
       }
     }.bind(this));
   },
@@ -68,6 +69,10 @@ CreateJam = Backbone.Model.extend({
 
   makeCreateJamURL: function(url) {
     return this.api.baseWebURL + '/jam/create?signin=1&source=jamlet&url=' + encodeURIComponent(url);
+  },
+
+  getJamTitle: function(tab) {
+    return tab.title;
   }
 });
 
@@ -170,8 +175,14 @@ CreateJamView = Backbone.View.extend({
   render: function() {
     $(this.el)
       .addClass('create-jam')
-      .html("<button>Make this my jam</button>")
+      .empty()
       .attr('data-has-url', this.hasURL());
+
+    $("<button>Make this my jam</button>").appendTo(this.el);
+    $("<div/>")
+      .addClass('source')
+      .text("[VIDEO|AUDIO] will be sourced from this page: \u201C" + this.model.get('title') + "\u201D")
+      .appendTo(this.el);
   },
 
   openCreateJamPage: function() {

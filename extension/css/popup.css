@@ -32,6 +32,11 @@ body {
   padding: 4px 8px;
 }
 
+.create-jam .source {
+  margin-top: 12px;
+  font-size: 13px;
+}
+
 .current-jam {
   display: none;
 }
