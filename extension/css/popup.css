@@ -25,11 +25,21 @@ body {
   display: block;
   padding: 12px;
   text-align: center;
-  border-bottom: 1px solid #ccc;
+  background: #eee;
+  border-bottom: 1px solid black;
 }
 
 .create-jam button {
-  padding: 4px 8px;
+  padding: 8px 16px;
+  background: #808080;
+  border: none;
+  border-radius: 2px;
+  box-shadow: 0 1px 0 #696969;
+  color: #eee;
+  font-size: 12px;
+  font-family: helvetica, sans-serif;
+  outline: none;
+  cursor: pointer;
 }
 
 .create-jam .source {
