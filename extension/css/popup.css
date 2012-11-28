@@ -65,19 +65,18 @@ body {
   cursor: pointer;
 }
 
-.current-jam .jamvatar,
-.current-jam .info {
-  display: inline-block;
-  vertical-align: top;
-}
-
 .current-jam .jamvatar {
+  float: left;
   margin-right: 8px;
 }
 
 .current-jam .jamvatar img {
   width: 28px;
   height: 28px;
+}
+
+.current-jam .info {
+  overflow: hidden;
 }
 
 .current-jam .title {
