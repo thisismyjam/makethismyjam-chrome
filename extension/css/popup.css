@@ -18,6 +18,11 @@ body {
 }
 
 .create-jam {
+  display: none;
+}
+
+.create-jam[data-has-url="true"] {
+  display: block;
   padding: 12px;
   text-align: center;
   border-bottom: 1px solid #ccc;

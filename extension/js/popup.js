@@ -166,17 +166,20 @@ CreateJamView = Backbone.View.extend({
   },
 
   render: function() {
-    console.log("this.model", this.model);
-    console.log("this.model.get('url')", this.model.get('url'));
-
     $(this.el)
       .addClass('create-jam')
       .html("<button>Make this my jam</button>")
-      .toggle(_.isString(this.model.get('url')));
+      .attr('data-has-url', this.hasURL());
   },
 
   openCreateJamPage: function() {
-    this.browser.createTab({url: this.model.get('url')});
+    if (this.hasURL()) {
+      this.browser.createTab({url: this.model.get('url')});
+    }
+  },
+
+  hasURL: function() {
+    return _.isString(this.model.get('url'));
   }
 });
 
