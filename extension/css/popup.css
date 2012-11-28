@@ -6,7 +6,7 @@ body {
 
 #popup {
   width: 320px;
-  min-height: 60px;
+  min-height: 300px;
   max-height: 480px;
   overflow: auto;
 }
@@ -53,31 +53,64 @@ body {
 
 .current-jam[data-status="available"] {
   display: block;
-  padding: 6px;
-  text-align: center;
-  background: #ddd;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  padding: 12px 16px;
+  background: #808080;
+  font-size: 13px;
+}
+
+.current-jam, .current-jam a {
+  color: #ddd;
+}
+
+.current-jam[data-has-jam="true"] {
   cursor: pointer;
 }
 
-.current-jam .title {
-  font-weight: bold;
-}
-
-.current-jam .play-count,
-.current-jam .likes-count,
-.current-jam .comments-count {
+.current-jam .jamvatar,
+.current-jam .info {
   display: inline-block;
-  font-size: 0.9em;
+  vertical-align: top;
 }
 
-.current-jam .play-count:after     { content: "\0000A0plays"; }
-.current-jam .likes-count:after    { content: "\0000A0likes"; }
-.current-jam .comments-count:after { content: "\0000A0comments"; }
-
-.current-jam .likes-count:before,
-.current-jam .comments-count:before {
-  content: "\0000A0\0000B7\0000A0";
+.current-jam .jamvatar {
+  margin-right: 8px;
 }
+
+.current-jam .jamvatar img {
+  width: 28px;
+  height: 28px;
+}
+
+.current-jam .title {
+  line-height: 12px;
+  margin-bottom: 4px;
+}
+
+.current-jam .stat {
+  display: inline-block;
+  background: url('/img/home_actions.png') no-repeat;
+  padding-right: 17px;
+  color: #bebebe;
+}
+
+.current-jam .stat:before {
+  display: inline-block;
+  content: "|";
+  margin: 0 7px;
+}
+
+.current-jam .stat:first-child:before {
+  display: none;
+}
+
+.current-jam .play-count     { background-position: right -10px; }
+.current-jam .likes-count    { background-position: right -90px; }
+.current-jam .comments-count { background-position: right -50px; }
 
 .home-feed {
   list-style: none;
@@ -99,7 +132,7 @@ body {
 
 .no-jams {
   text-align: center;
-  margin: 12px;
+  margin: 30px 12px;
   font-size: 13px;
   color: #bbb;
 }

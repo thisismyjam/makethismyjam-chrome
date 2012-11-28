@@ -125,11 +125,9 @@ CurrentJam = Backbone.Model.extend({
 
       if (error) {
         this.set({status: 'error', lastError: error});
-      } else if (response.jam) {
+      } else {
         this.set(response.jam);
         this.set({status: 'available'});
-      } else {
-        this.set({status: 'no-jam'});
       }
     }.bind(this));
   }
@@ -138,6 +136,7 @@ CurrentJam = Backbone.Model.extend({
 PopupView = Backbone.View.extend({
   initialize: function(options) {
     this.browser = options.browser;
+    this.api = options.api;
 
     ["authenticating", "unauthenticated", "available"].forEach(function(className) {
       $("<div/>").addClass(className).appendTo(this.el);
@@ -163,7 +162,8 @@ PopupView = Backbone.View.extend({
 
     _.extend(options, {
       el: $("<div/>").appendTo(this.$(appendToSelector)),
-      browser: this.browser
+      browser: this.browser,
+      api: this.api
     });
 
     var component = new componentClass(options);
@@ -238,37 +238,61 @@ CreateJamView = Backbone.View.extend({
 
 CurrentJamView = Backbone.View.extend({
   events: {
-    "click": "openJam"
+    "click":   "openJam",
+    "click a": "openLink"
   },
 
   initialize: function(options) {
     this.browser = options.browser;
+    this.api = options.api;
     this.model.on("change", this.render, this);
   },
 
   render: function() {
-    var jam    = this.model;
     var status = this.model.get('status');
 
     $(this.el)
       .addClass('current-jam')
       .empty()
-      .attr("data-status", status);
+      .attr("data-status", status)
+      .attr("data-has-jam", String(this.hasJam()));
 
     if (status === 'available') {
-      $("<div/>").addClass("title").text(jam.get('title')).appendTo(this.el);
-      $("<div/>").addClass("artist").text(jam.get('artist')).appendTo(this.el);
+      if (this.hasJam()) {
+        var jam = this.model.toJSON();
+        console.log(jam);
 
-      if (jam.get('playCount')     > 0) $("<div/>").addClass("play-count").text(jam.get('playCount')).appendTo(this.el);
-      if (jam.get('likesCount')    > 0) $("<div/>").addClass("likes-count").text(jam.get('likesCount')).appendTo(this.el);
-      if (jam.get('commentsCount') > 0) $("<div/>").addClass("comments-count").text(jam.get('commentsCount')).appendTo(this.el);
+        $("<div/>").addClass("jamvatar").append($("<img/>").attr("src", jam.jamvatarSmall)).appendTo(this.el);
+
+        var info = $("<div/>").addClass("info").appendTo(this.el);
+
+        $("<div/>").addClass("title").text("Your current jam: " + jam.title + " by " + jam.artist).appendTo(info);
+
+        var stats = $("<div/>").addClass("stats").appendTo(info);
+
+        if (jam.playCount     > 0) $("<div/>").addClass("stat").addClass("play-count").text(jam.playCount).appendTo(stats);
+        if (jam.likesCount    > 0) $("<div/>").addClass("stat").addClass("likes-count").text(jam.likesCount).appendTo(stats);
+        if (jam.commentsCount > 0) $("<div/>").addClass("stat").addClass("comments-count").text(jam.commentsCount).appendTo(stats);
+      } else {
+        var createJamLink = $("<a/>").html("What&rsquo;s your favourite song right now?").attr('href', this.api.baseWebURL + '/jam/create');
+        $("<div/>").append(createJamLink).appendTo(this.el);
+        $("<div/>").text("Make it your jam and share it with your friends!").appendTo(this.el);
+      }
     }
   },
 
   openJam: function() {
-    if (this.model.get('url')) {
+    if (this.hasJam()) {
       this.browser.createTab({url: this.model.get('url')});
     }
+  },
+
+  openLink: function(event) {
+    this.browser.createTab({url: event.target.href});
+  },
+
+  hasJam: function() {
+    return _.isString(this.model.get('title'));
   }
 });
 
@@ -286,10 +310,11 @@ HomeFeedView = Backbone.View.extend({
       .empty();
 
     if (this.model.models.length === 0) {
-      $(this.el).html("<div class='no-jams'>No jams.</div>");
+      $(this.el).html("<div class='no-jams'>No jams from people you follow. Why not find more people to get music from?</div>");
     }
 
     _.each(this.model.models, function(jam) {
+      console.log(jam);
       var item = $("<div/>").addClass('jam').attr('data-seen', String(jam.get('seen')));
 
       $("<div/>").addClass("jamvatar").append($("<img/>").attr("src", jam.get('jamvatarSmall'))).appendTo(item);
@@ -315,7 +340,8 @@ var popup = new Popup({
 var popupView = new PopupView({
   el:      $('#popup'),
   model:   popup,
-  browser: Jamlet.Browser
+  api:     Jamlet.API,
+  browser: Jamlet.Browser,
 })
 
 popupView.render();
