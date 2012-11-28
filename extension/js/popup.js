@@ -37,42 +37,77 @@ CreateJam = Backbone.Model.extend({
   fetch: function() {
     this.browser.fetchCurrentTab(function(tab) {
       if (tab && this.isPotentiallyJammable(tab.url)) {
-        this.set('url', this.makeCreateJamURL(tab.url));
-        this.set('title', this.getJamTitle(tab));
+        this.set({
+          url:   this.createJamURL(tab.url),
+          title: this.mediaTitle(tab.url, tab.title),
+          type:  this.mediaType(tab.url)
+        });
       }
     }.bind(this));
   },
 
   isPotentiallyJammable: function(url) {
-    // YouTube watch page
-    if (url.match(/^(https?:\/\/)?(www\.)?youtube\.com\/watch.+/i))
-      return true;
-    
-    // Potential SoundCloud track page (TODO: Introspect page to make sure?)
-    if (url.match(/^(https?:\/\/)?(www\.)?soundcloud\.com\/[^\/]+\/[^\/]+/i))
-      return true;
-    
-    // Found audio
-    if (url.match(/^[^ ]+\/[^ ]+\.mp3$/))
-      return true;
-    
-    // Hype Machine track page
-    if (url.match(/^(https?:\/\/)?(www\.)?hypem.com\/track[^\/]+/i))
-      return true;
-    
-    // Potential Bandcamp track page (TODO: Introspect page to make sure?)
-    if (url.match(/^(https?:\/\/)[^\/]+\/track\//))
-      return true;
-
-    return false;
+    return this.mediaSource(url) !== null;
   },
 
-  makeCreateJamURL: function(url) {
+  createJamURL: function(url) {
     return this.api.baseWebURL + '/jam/create?signin=1&source=jamlet&url=' + encodeURIComponent(url);
   },
 
-  getJamTitle: function(tab) {
-    return tab.title;
+  mediaTitle: function(url, title) {
+    console.log(this.mediaSource(url));
+
+    switch (this.mediaSource(url)) {
+      case 'youtube':
+        return title.replace(/\s+-\s+youtube\b.*/i, '');
+
+      case 'soundcloud':
+        return title.replace(/\s+(on\s+)?soundcloud\s+.*/i, '');
+
+      case 'found':
+        return (title.match(/[^\/]+$/) || [title])[0];
+
+      case 'hypemachine':
+        return title.replace(/(,[a-z ]+)?\/\s+the\s+hype\s+machine.*/i, '');
+
+      default:
+        return title;
+    }
+  },
+
+  mediaType: function(url) {
+    switch (this.mediaSource(url)) {
+      case 'youtube':
+      case 'vimeo':
+        return 'video';
+
+      default:
+        return 'audio';
+    }
+  },
+
+  mediaSource: function(url) {
+    // YouTube watch page
+    if (url.match(/^(https?:\/\/)?(www\.)?youtube\.com\/watch.+/i))
+      return 'youtube';
+    
+    // Potential SoundCloud track page (TODO: Introspect page to make sure?)
+    if (url.match(/^(https?:\/\/)?(www\.)?soundcloud\.com\/[^\/]+\/[^\/]+/i))
+      return 'soundcloud';
+    
+    // Found audio
+    if (url.match(/^[^ ]+\/[^ ]+\.mp3$/))
+      return 'found';
+    
+    // Hype Machine track page
+    if (url.match(/^(https?:\/\/)?(www\.)?hypem.com\/track\/[^\/]+/i))
+      return 'hypemachine';
+    
+    // Potential Bandcamp track page (TODO: Introspect page to make sure?)
+    if (url.match(/^(https?:\/\/)[^\/]+\/track\//))
+      return 'bandcamp';
+
+    return null;
   }
 });
 
@@ -178,11 +213,16 @@ CreateJamView = Backbone.View.extend({
       .empty()
       .attr('data-has-url', this.hasURL());
 
-    $("<button>Make this my jam</button>").appendTo(this.el);
-    $("<div/>")
-      .addClass('source')
-      .text("[VIDEO|AUDIO] will be sourced from this page: \u201C" + this.model.get('title') + "\u201D")
-      .appendTo(this.el);
+    if (this.hasURL()) {
+      var type = this.model.get('type');
+      type = type[0].toUpperCase() + type.substring(1).toLowerCase();
+
+      $("<button>Make this my jam</button>").appendTo(this.el);
+      $("<div/>")
+        .addClass('source')
+        .text(type + " will be sourced from this page: \u201C" + this.model.get('title') + "\u201D")
+        .appendTo(this.el);
+    }
   },
 
   openCreateJamPage: function() {
