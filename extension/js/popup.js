@@ -55,8 +55,6 @@ CreateJam = Backbone.Model.extend({
   },
 
   mediaTitle: function(url, title) {
-    console.log(this.mediaSource(url));
-
     switch (this.mediaSource(url)) {
       case 'youtube':
         return title.replace(/\s+-\s+youtube\b.*/i, '');
@@ -260,7 +258,6 @@ CurrentJamView = Backbone.View.extend({
     if (status === 'available') {
       if (this.hasJam()) {
         var jam = this.model.toJSON();
-        console.log(jam);
 
         $("<div/>").addClass("jamvatar").append($("<img/>").attr("src", jam.jamvatarSmall)).appendTo(this.el);
 
@@ -314,7 +311,6 @@ HomeFeedView = Backbone.View.extend({
     }
 
     _.each(this.model.models, function(jam) {
-      console.log(jam);
       var item = $("<div/>").addClass('jam').attr('data-seen', String(jam.get('seen')));
 
       $("<div/>").addClass("jamvatar").append($("<img/>").attr("src", jam.get('jamvatarSmall'))).appendTo(item);
