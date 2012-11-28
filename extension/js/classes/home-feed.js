@@ -1,5 +1,5 @@
 Jamlet.HomeFeedCollection = Backbone.Collection.extend({
-  initialize: function(options) {
+  initialize: function(models, options) {
     this.timeKeeper = options.timeKeeper;
     this.timeKeeper.on('change', this.filterJams, this);
     this.on('reset', this.filterJams, this);
