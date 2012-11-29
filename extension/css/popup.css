@@ -26,20 +26,34 @@ body {
   padding: 12px;
   text-align: center;
   background: #eee;
-  border-bottom: 1px solid black;
+  color: #6e6e6e;
+  border-bottom: 1px solid #c2c2c2;
 }
 
 .create-jam button {
-  padding: 8px 16px;
-  background: #808080;
-  border: none;
+  background: -webkit-linear-gradient(top,rgba(255,240,0,1) 0,rgba(223,213,0,1) 100%);
   border-radius: 2px;
-  box-shadow: 0 1px 0 #696969;
-  color: #eee;
-  font-size: 12px;
-  font-family: helvetica, sans-serif;
-  outline: none;
+  color: #444;
+  display: inline-block;
+  font-size: 13px;
+  text-decoration: none;
+  text-shadow: 0 1px rgba(255,255,255,.75);
   cursor: pointer;
+  height: 20px;
+  box-sizing: content-box;
+  font-family: Gibson-Regular,"HelveticaNeue","Helvetica Neue",Helvetica,Arial,sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border: 1px solid #ccc;
+  padding: 8px 11px 3px;
+  min-width: 40px;
+  font-weight: normal;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+}
+
+.create-jam button:hover {
+  background: -webkit-linear-gradient(top, rgba(246,237,0,1) 0%,rgba(216,198,0,1) 100%);
 }
 
 .create-jam .source {
