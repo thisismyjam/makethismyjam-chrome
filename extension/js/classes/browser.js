@@ -3,42 +3,44 @@ Jamlet.Browser = function(){
 };
 
 Jamlet.Browser.prototype = {
-  currentTab: null,
+  currentTabId: null,
 
   init: function() {
-    this.onTabActivated(this.tabActivated.bind(this));
+    chrome.tabs.onActivated.addListener(this.updateCurrentTabId.bind(this));
   },
 
-  onTabActivated: function(callback) {
+  updateCurrentTabId: function(tabInfo) {
+    this.currentTabId = tabInfo.tabId;
+  },
+
+  onTabChanged: function(callback) {
     chrome.tabs.onActivated.addListener(function(tabInfo) {
-      this.fetchTab(tabInfo.tabId, callback);
+      chrome.tabs.get(tabInfo.tabId, function(tab) {
+        if (tab) {
+          return callback({
+            url:   tab.url,
+            title: tab.title
+          });
+        } else {
+          return callback(null);
+        }
+      });
     }.bind(this));
-  },
 
-  tabActivated: function(tab) {
-    this.currentTab = tab;
-  },
-
-  createTab: function(options) {
-    chrome.tabs.create(options);
-  },
-
-  fetchCurrentTab: function(callback) {
-    if (!this.currentTab) return callback(null);
-    this.fetchTab(this.currentTab.tabId, callback);
-  },
-
-  fetchTab: function(tabId, callback) {
-    chrome.tabs.get(tabId, function(tab) {
-      if (tab) {
-        return callback({
+    chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+      if (tabId === this.currentTabId) {
+        callback({
           url:   tab.url,
           title: tab.title
         });
       } else {
-        return callback(null);
+        // ignore background tab changes
       }
-    });
+    }.bind(this));
+  },
+
+  createTab: function(options) {
+    chrome.tabs.create(options);
   },
 
   updateBadge: function(options) {

@@ -5,10 +5,10 @@ Jamlet.CreateJam = Backbone.Model.extend({
     this.api = options.api;
     this.browser = options.browser;
 
-    this.browser.onTabActivated(this.tabActivated.bind(this));
+    this.browser.onTabChanged(this.tabChanged.bind(this));
   },
 
-  tabActivated: function(tab) {
+  tabChanged: function(tab) {
     if (tab && this.isPotentiallyJammable(tab.url)) {
       this.set({
         jammable: true,
