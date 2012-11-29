@@ -1,7 +1,7 @@
 Jamlet.globals = (function() {
   var api             = new Jamlet.API();
   var browser         = new Jamlet.Browser();
-  var lastOpenedPopup = new Backbone.Model();
+  var lastOpenedPopup = new Jamlet.TimeKeeper({localStorageKey: "jamlet.lastOpenedPopup"});
   var homeFeed        = new Jamlet.HomeFeed([], {api: api, timeKeeper: lastOpenedPopup});
   var createJam       = new Jamlet.CreateJam({api: api, browser: browser});
   var badge           = new Jamlet.Badge({homeFeed: homeFeed, createJam: createJam, browser: browser});

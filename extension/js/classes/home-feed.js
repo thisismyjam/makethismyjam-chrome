@@ -2,7 +2,7 @@ Jamlet.HomeFeed = Backbone.Collection.extend({
   initialize: function(models, options) {
     this.api = options.api;
     this.timeKeeper = options.timeKeeper;
-    this.timeKeeper.on('change', this.filterJams, this);
+    this.timeKeeper.on('update', this.filterJams, this);
     this.on('reset', this.filterJams, this);
   },
 
@@ -33,7 +33,7 @@ Jamlet.HomeFeed = Backbone.Collection.extend({
 
     if (myJam) this.remove(myJam);
 
-    var timestamp = this.timeKeeper.get('lastTimestamp');
+    var timestamp = this.timeKeeper.getTimestamp();
 
     if (timestamp) {
       this.each(function(jam) {

@@ -290,7 +290,7 @@ HomeFeedView = Backbone.View.extend({
   popupView.render();
   popup.fetch();
 
-  globals.lastOpenedPopup.set({lastTimestamp: new Date()});
+  globals.lastOpenedPopup.updateTimestamp();
 
   globals.popup = popup;
   globals.popupView = popupView;

@@ -15,6 +15,7 @@
             "js/classes/jamlet.js",
             "js/classes/api.js",
             "js/classes/browser.js",
+            "js/classes/time-keeper.js",
             "js/classes/checker.js",
             "js/classes/home-feed.js",
             "js/classes/create-jam.js",
