@@ -91,23 +91,22 @@ body {
 .current-jam .stat {
   display: inline-block;
   background: url('/img/home_actions.png') no-repeat;
-  padding-right: 17px;
-  color: #bebebe;
+  padding-right: 19px;
 }
 
 .current-jam .stat:before {
   display: inline-block;
   content: "|";
-  margin: 0 7px;
+  margin: 0 7px 0 5px;
 }
 
 .current-jam .stat:first-child:before {
   display: none;
 }
 
-.current-jam .play-count     { background-position: right -10px; }
-.current-jam .likes-count    { background-position: right -90px; }
-.current-jam .comments-count { background-position: right -50px; }
+.current-jam .play-count     { background-position: right -9px; padding-right: 21px; }
+.current-jam .likes-count    { background-position: right -89px; }
+.current-jam .comments-count { background-position: right -49px; }
 
 .home-feed {
   list-style: none;
