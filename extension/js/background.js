@@ -2,8 +2,8 @@ Jamlet.globals = (function() {
   var api             = new Jamlet.API();
   var browser         = new Jamlet.Browser();
   var lastOpenedPopup = new Backbone.Model();
-  var homeFeed        = new Jamlet.HomeFeedCollection([], {api: api, timeKeeper: lastOpenedPopup});
-  var createJam       = new Jamlet.CreateJamModel({api: api, browser: browser});
+  var homeFeed        = new Jamlet.HomeFeed([], {api: api, timeKeeper: lastOpenedPopup});
+  var createJam       = new Jamlet.CreateJam({api: api, browser: browser});
   var badge           = new Jamlet.Badge({homeFeed: homeFeed, createJam: createJam, browser: browser});
   var homeFeedChecker = new Jamlet.Checker({model: homeFeed});
 

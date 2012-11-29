@@ -1,4 +1,4 @@
-Jamlet.CreateJamModel = Backbone.Model.extend({
+Jamlet.CreateJam = Backbone.Model.extend({
   createJamURL: null,
 
   initialize: function(options) {

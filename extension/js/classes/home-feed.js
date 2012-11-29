@@ -1,4 +1,4 @@
-Jamlet.HomeFeedCollection = Backbone.Collection.extend({
+Jamlet.HomeFeed = Backbone.Collection.extend({
   initialize: function(models, options) {
     this.api = options.api;
     this.timeKeeper = options.timeKeeper;
