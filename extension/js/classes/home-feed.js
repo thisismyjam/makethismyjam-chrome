@@ -1,5 +1,6 @@
 Jamlet.HomeFeedCollection = Backbone.Collection.extend({
   initialize: function(models, options) {
+    this.api = options.api;
     this.timeKeeper = options.timeKeeper;
     this.timeKeeper.on('change', this.filterJams, this);
     this.on('reset', this.filterJams, this);
@@ -7,11 +8,12 @@ Jamlet.HomeFeedCollection = Backbone.Collection.extend({
 
   fetch: function(options) {
     var collection = this;
+    var api = this.api;
 
-    Jamlet.API.authenticate(function(error, response) {
+    api.authenticate(function(error, response) {
       if (error) return;
 
-      Jamlet.API.fetchHomeFeed(function(error, response) {
+      api.fetchHomeFeed(function(error, response) {
         if (response) {
           collection.reset(response.jams);
 
@@ -24,8 +26,9 @@ Jamlet.HomeFeedCollection = Backbone.Collection.extend({
   },
 
   filterJams: function(jams) {
+    var api = this.api;
     var myJam = this.find(function(jam) {
-      return jam.get('from') === Jamlet.API.credentials.username;
+      return jam.get('from') === api.credentials.username;
     });
 
     if (myJam) this.remove(myJam);

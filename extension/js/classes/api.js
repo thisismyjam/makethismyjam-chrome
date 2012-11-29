@@ -1,4 +1,6 @@
-Jamlet.API = {
+Jamlet.API = function(){};
+
+Jamlet.API.prototype = {
   baseWebURL: 'http://www.thisismyjam.com',
   baseAPIURL: 'http://api.thisismyjam.com',
   apiKey: '80403541f0349e10305d0021e8bc0c7d',

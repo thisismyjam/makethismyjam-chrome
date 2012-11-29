@@ -1,7 +1,12 @@
-Jamlet.Badge = {
+Jamlet.Badge = function(options) {
+  this.initialize(options);
+};
+
+Jamlet.Badge.prototype = {
   initialize: function(options) {
     this.homeFeed = options.homeFeed;
     this.createJam = options.createJam;
+    this.browser = options.browser;
 
     this.homeFeed.on('reset', this.updateBadge, this);
     this.homeFeed.on('change:seen', this.updateBadge, this);
@@ -13,17 +18,17 @@ Jamlet.Badge = {
     var unseenCount = this.homeFeed.getUnseenJamCount();
 
     if (unseenCount > 0) {
-      Jamlet.Browser.updateBadge({
+      this.browser.updateBadge({
         color: "#00ff00",
         text:  String(unseenCount)
       });
     } else {
-      Jamlet.Browser.updateBadge({text: ""});
+      this.browser.updateBadge({text: ""});
     }
   },
 
   updateIcon: function() {
     var path = this.createJam.get('jammable') ? "/img/toolbar/icon_on.png" : "/img/toolbar/icon_rest.png";
-    Jamlet.Browser.setToolbarIconPath(path);
+    this.browser.setToolbarIconPath(path);
   }
 }

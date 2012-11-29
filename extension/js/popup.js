@@ -5,9 +5,9 @@ Popup = Backbone.Model.extend({
 
     this.set({status: 'initial'});
 
-    this.createJam  = Jamlet.CreateJam;
+    this.createJam  = options.createJam;
     this.currentJam = new CurrentJam({api: this.api});
-    this.homeFeed   = Jamlet.HomeFeed;
+    this.homeFeed   = options.homeFeed;
   },
 
   fetch: function() {
@@ -268,21 +268,28 @@ HomeFeedView = Backbone.View.extend({
   }
 });
 
-var Jamlet = chrome.extension.getBackgroundPage().Jamlet;
+(function() {
+  var globals = chrome.extension.getBackgroundPage().Jamlet.globals;
 
-var popup = new Popup({
-  api:     Jamlet.API,
-  browser: Jamlet.Browser
-});
+  var popup = new Popup({
+    api:       globals.api,
+    browser:   globals.browser,
+    createJam: globals.createJam,
+    homeFeed:  globals.homeFeed
+  });
 
-var popupView = new PopupView({
-  el:      $('#popup'),
-  model:   popup,
-  api:     Jamlet.API,
-  browser: Jamlet.Browser,
-})
+  var popupView = new PopupView({
+    el:      $('#popup'),
+    model:   popup,
+    api:     globals.api,
+    browser: globals.browser,
+  });
 
-popupView.render();
-popup.fetch();
+  popupView.render();
+  popup.fetch();
 
-Jamlet.LastOpenedPopup.set({lastTimestamp: new Date()});
+  globals.lastOpenedPopup.set({lastTimestamp: new Date()});
+
+  globals.popup = popup;
+  globals.popupView = popupView;
+})();

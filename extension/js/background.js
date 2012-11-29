@@ -1,11 +1,20 @@
-Jamlet.Browser.init();
+Jamlet.globals = (function() {
+  var api             = new Jamlet.API();
+  var browser         = new Jamlet.Browser();
+  var lastOpenedPopup = new Backbone.Model();
+  var homeFeed        = new Jamlet.HomeFeedCollection([], {api: api, timeKeeper: lastOpenedPopup});
+  var createJam       = new Jamlet.CreateJamModel({api: api, browser: browser});
+  var badge           = new Jamlet.Badge({homeFeed: homeFeed, createJam: createJam, browser: browser});
+  var homeFeedChecker = new Jamlet.Checker({model: homeFeed});
 
-Jamlet.LastOpenedPopup = new Backbone.Model();
-Jamlet.HomeFeed = new Jamlet.HomeFeedCollection([], {timeKeeper: Jamlet.LastOpenedPopup});
+  homeFeedChecker.start();
 
-Jamlet.CreateJam = new Jamlet.CreateJamModel({api: Jamlet.API, browser: Jamlet.Browser});
-
-Jamlet.Badge.initialize({homeFeed: Jamlet.HomeFeed, createJam: Jamlet.CreateJam});
-
-Jamlet.HomeFeedChecker = new Jamlet.Checker({model: Jamlet.HomeFeed});
-Jamlet.HomeFeedChecker.start();
+  return {
+    api:             api,
+    browser:         browser,
+    lastOpenedPopup: lastOpenedPopup,
+    homeFeed:        homeFeed,
+    createJam:       createJam,
+    badge:           badge
+  }
+})();

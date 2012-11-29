@@ -1,4 +1,8 @@
-Jamlet.Browser = {
+Jamlet.Browser = function(){
+  this.init();
+};
+
+Jamlet.Browser.prototype = {
   currentTab: null,
 
   init: function() {
