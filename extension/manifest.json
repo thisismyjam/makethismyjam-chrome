@@ -1,6 +1,6 @@
 {
     "name": "Jamlet",
-    "version": "0.2.0.13",
+    "version": "0.2.0.14",
     "update_url": "https://dl.dropbox.com/u/166030/jamlet/updates.xml",
     "description": "An easy way to update your song on This Is My Jam whilst browsing supported music sites (SoundCloud, YouTube, Hype Machine, etc).",
     "browser_action": {
