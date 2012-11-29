@@ -6,7 +6,8 @@ Popup = Backbone.Model.extend({
     this.set({status: 'initial'});
 
     this.createJam  = options.createJam;
-    this.currentJam = new CurrentJam({api: this.api});
+    this.currentUser = new CurrentUser();
+    this.currentJam = new CurrentJam();
     this.homeFeed   = options.homeFeed;
   },
 
@@ -19,34 +20,26 @@ Popup = Backbone.Model.extend({
       if (error) {
         this.set({status: 'unauthenticated'});
       } else {
-        this.currentJam.fetch();
+        this.api.fetchCurrentJam(function(error, response) {
+          if (error) {
+            // ignore error for now
+          } else {
+            this.currentUser.set(response.person);
+
+            var jamAttributes = {hasJam: (!!response.jam), status: 'available'};
+            _.extend(jamAttributes, response.jam);
+            this.currentJam.set(jamAttributes);
+          }
+        }.bind(this));
+
         this.set({status: 'available'});
       }
     }.bind(this));
   }
 });
 
-CurrentJam = Backbone.Model.extend({
-  initialize: function(options) {
-    this.api = options.api;
-    this.set({status: 'initial'});
-  },
-
-  fetch: function() {
-    this.set({status: 'fetching'});
-
-    this.api.fetchCurrentJam(function(error, response) {
-      if (this.get('status') !== 'fetching') return; // we've moved on
-
-      if (error) {
-        this.set({status: 'error', lastError: error});
-      } else {
-        this.set(response.jam);
-        this.set({status: 'available'});
-      }
-    }.bind(this));
-  }
-});
+CurrentUser = Backbone.Model.extend({});
+CurrentJam = Backbone.Model.extend({status: 'initial'});
 
 PopupView = Backbone.View.extend({
   initialize: function(options) {
@@ -61,7 +54,7 @@ PopupView = Backbone.View.extend({
     this.signIn     = this.addComponent(SignInView,     ".unauthenticated");
 
     this.createJam  = this.addComponent(CreateJamView,  ".available", {model: this.model.createJam});
-    this.homeFeed   = this.addComponent(HomeFeedView,   ".available", {model: this.model.homeFeed});
+    this.homeFeed   = this.addComponent(HomeFeedView,   ".available", {model: this.model.homeFeed, currentUser: this.model.currentUser});
     this.currentJam = this.addComponent(CurrentJamView, ".available", {model: this.model.currentJam});
 
     this.model.on("change", this.render, this);
@@ -194,7 +187,7 @@ CurrentJamView = Backbone.View.extend({
   },
 
   hasJam: function() {
-    return _.isString(this.model.get('title'));
+    return this.model.get('hasJam');
   }
 });
 
@@ -202,6 +195,7 @@ HomeFeedView = Backbone.View.extend({
   initialize: function(options) {
     this.browser = options.browser;
     this.api = options.api;
+    this.currentUser = options.currentUser;
     this.model.bind("reset", this.render, this);
   },
 
@@ -214,7 +208,11 @@ HomeFeedView = Backbone.View.extend({
       .empty();
 
     if (this.model.models.length === 0) {
-      $(this.el).html("<div class='no-jams'>No jams from people you follow. Why not <a href='" + this.api.baseWebURL + "/suggestions'>find more people to get music from?</a></div>");
+      if (this.currentUser.get('followingCount') > 0) {
+        $(this.el).html("<div class='no-jams'>No jams from people you follow. Why not <a href='" + this.api.baseWebURL + "/suggestions'>find more people to get music from?</a></div>");
+      } else {
+        $(this.el).html("<div class='no-jams'><a href='" + this.api.baseWebURL + "/suggestions'>Follow some people</a> whose music you like, and their jams will appear here!</div>");
+      }
     }
 
     _.each(this.model.models, function(model) {
