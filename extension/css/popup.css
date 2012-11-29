@@ -1,4 +1,5 @@
 * { margin: 0; padding: 0; outline: none; }
+a { color: inherit; }
 
 body {
   font-family: helvetica;
@@ -59,9 +60,6 @@ body {
   font-size: 13px;
 
   background: -webkit-linear-gradient(top, #efeeee, #e6e6e6);
-}
-
-.current-jam, .current-jam a {
   color: #6e6e6e;
 }
 
