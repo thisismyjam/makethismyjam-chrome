@@ -2,7 +2,7 @@
 a { color: inherit; }
 
 body {
-  font-family: helvetica;
+  font-family: helvetica, arial, sans-serif;
   background: #f9f9f9;
   text-shadow: 0 1px 1px white;
 }
