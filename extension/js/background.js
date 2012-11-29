@@ -14,7 +14,6 @@ Jamlet.globals = (function() {
     browser:         browser,
     lastOpenedPopup: lastOpenedPopup,
     homeFeed:        homeFeed,
-    createJam:       createJam,
-    badge:           badge
+    createJam:       createJam
   }
 })();
