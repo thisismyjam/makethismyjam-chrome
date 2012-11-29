@@ -201,6 +201,7 @@ CurrentJamView = Backbone.View.extend({
 HomeFeedView = Backbone.View.extend({
   initialize: function(options) {
     this.browser = options.browser;
+    this.api = options.api;
     this.model.bind("reset", this.render, this);
   },
 
@@ -213,7 +214,7 @@ HomeFeedView = Backbone.View.extend({
       .empty();
 
     if (this.model.models.length === 0) {
-      $(this.el).html("<div class='no-jams'>No jams from people you follow. Why not find more people to get music from?</div>");
+      $(this.el).html("<div class='no-jams'>No jams from people you follow. Why not <a href='" + this.api.baseWebURL + "/suggestions'>find more people to get music from?</a></div>");
     }
 
     _.each(this.model.models, function(model) {
