@@ -41,15 +41,12 @@ body {
   cursor: pointer;
   height: 20px;
   box-sizing: content-box;
-  font-family: Gibson-Regular,"HelveticaNeue","Helvetica Neue",Helvetica,Arial,sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 1px;
   border: 1px solid #ccc;
-  padding: 8px 11px 3px;
+  padding: 5px 11px 3px;
   min-width: 40px;
+  font-family: helvetica, arial, sans-serif;
   font-weight: normal;
   font-style: normal;
-  -webkit-font-smoothing: antialiased;
 }
 
 .create-jam button:hover {
