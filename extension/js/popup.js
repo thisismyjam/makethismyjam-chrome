@@ -95,20 +95,13 @@ LoadingView = Backbone.View.extend({
 });
 
 SignInView = Backbone.View.extend({
-  events: {
-    "click a": "openSignInPage"
-  },
-
   initialize: function(options) {
-    this.browser = options.browser
+    this.browser = options.browser;
+    this.api = options.api;
   },
 
   render: function() {
-    $(this.el).addClass('sign-in').html('You need to <a href="#">sign in</a>.');
-  },
-
-  openSignInPage: function() {
-    this.browser.createTab({url: this.api.baseWebURL});
+    $(this.el).addClass('sign-in').html('You need to <a href="' + this.api.baseWebURL + '">sign in</a>.');
   }
 });
 
@@ -153,8 +146,7 @@ CreateJamView = Backbone.View.extend({
 
 CurrentJamView = Backbone.View.extend({
   events: {
-    "click":   "openJam",
-    "click a": "openLink"
+    "click":   "openJam"
   },
 
   initialize: function(options) {
@@ -199,10 +191,6 @@ CurrentJamView = Backbone.View.extend({
     if (this.hasJam()) {
       this.browser.createTab({url: this.model.get('url')});
     }
-  },
-
-  openLink: function(event) {
-    this.browser.createTab({url: event.target.href});
   },
 
   hasJam: function() {
@@ -271,6 +259,7 @@ HomeFeedView = Backbone.View.extend({
 });
 
 (function() {
+  var popupElement = $('#popup');
   var globals = chrome.extension.getBackgroundPage().Jamlet.globals;
 
   var popup = new Popup({
@@ -281,7 +270,7 @@ HomeFeedView = Backbone.View.extend({
   });
 
   var popupView = new PopupView({
-    el:      $('#popup'),
+    el:      popupElement,
     model:   popup,
     api:     globals.api,
     browser: globals.browser,
@@ -294,4 +283,8 @@ HomeFeedView = Backbone.View.extend({
 
   globals.popup = popup;
   globals.popupView = popupView;
+
+  popupElement.on('click', 'a', function(event) {
+    globals.browser.createTab({url: event.target.href});
+  });
 })();
