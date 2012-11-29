@@ -15,16 +15,7 @@ Jamlet.Browser.prototype = {
 
   onTabChanged: function(callback) {
     chrome.tabs.onActivated.addListener(function(tabInfo) {
-      chrome.tabs.get(tabInfo.tabId, function(tab) {
-        if (tab) {
-          return callback({
-            url:   tab.url,
-            title: tab.title
-          });
-        } else {
-          return callback(null);
-        }
-      });
+      this._fetchTab(tabInfo.tabId, callback);
     }.bind(this));
 
     chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
@@ -37,6 +28,27 @@ Jamlet.Browser.prototype = {
         // ignore background tab changes
       }
     }.bind(this));
+  },
+
+  fetchCurrentTab: function(callback) {
+    if (this.currentTabId) {
+      this._fetchTab(this.currentTabId, callback);
+    } else {
+      callback(null);
+    }
+  },
+
+  _fetchTab: function(tabId, callback) {
+    chrome.tabs.get(tabId, function(tab) {
+      if (tab) {
+        callback({
+          url:   tab.url,
+          title: tab.title
+        });
+      } else {
+        callback(null);
+      }
+    });
   },
 
   createTab: function(options) {

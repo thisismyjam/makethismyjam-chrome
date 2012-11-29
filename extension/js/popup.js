@@ -13,6 +13,8 @@ Popup = Backbone.Model.extend({
   fetch: function() {
     this.set({status: 'authenticating'});
 
+    this.createJam.refreshCurrentTab();
+
     this.api.authenticate(function(error, credentials) {
       if (error) {
         this.set({status: 'unauthenticated'});
