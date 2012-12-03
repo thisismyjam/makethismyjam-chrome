@@ -257,7 +257,7 @@ HomeFeedView = Backbone.View.extend({
   }
 });
 
-(function() {
+$(document).ready(function() {
   var popupElement = $('#popup');
   var globals = chrome.extension.getBackgroundPage().Jamlet.globals;
 
@@ -286,4 +286,4 @@ HomeFeedView = Backbone.View.extend({
   popupElement.on('click', 'a', function(event) {
     globals.browser.createTab({url: event.target.href});
   });
-})();
+});
