@@ -13,6 +13,14 @@ Jamlet.Browser.prototype = {
     this.currentTabId = tabInfo.tabId;
   },
 
+  onJamHomepageLoaded: function(callback) {
+    chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
+      if (request.type === 'jamHomepageLoaded') {
+        callback();
+      }
+    })
+  },
+
   onTabChanged: function(callback) {
     chrome.tabs.onActivated.addListener(function(tabInfo) {
       this._fetchTab(tabInfo.tabId, callback);

@@ -1,18 +1,22 @@
 Jamlet.globals = (function() {
   var api             = new Jamlet.API();
   var browser         = new Jamlet.Browser();
-  var lastOpenedPopup = new Jamlet.TimeKeeper({localStorageKey: "jamlet.lastOpenedPopup"});
-  var homeFeed        = new Jamlet.HomeFeed([], {api: api, timeKeeper: lastOpenedPopup});
+  var lastSawHomeFeed = new Jamlet.TimeKeeper({localStorageKey: "jamlet.lastSawHomeFeed"});
+  var homeFeed        = new Jamlet.HomeFeed([], {api: api, timeKeeper: lastSawHomeFeed});
   var createJam       = new Jamlet.CreateJam({api: api, browser: browser});
   var badge           = new Jamlet.Badge({homeFeed: homeFeed, createJam: createJam, browser: browser});
   var homeFeedChecker = new Jamlet.Checker({model: homeFeed});
 
   homeFeedChecker.start();
 
+  browser.onJamHomepageLoaded(function() {
+    lastSawHomeFeed.updateTimestamp();
+  });
+
   return {
     api:             api,
     browser:         browser,
-    lastOpenedPopup: lastOpenedPopup,
+    lastSawHomeFeed: lastSawHomeFeed,
     homeFeed:        homeFeed,
     createJam:       createJam
   }

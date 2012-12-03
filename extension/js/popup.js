@@ -278,7 +278,7 @@ setTimeout(function() {
   popupView.render();
   popup.fetch();
 
-  globals.lastOpenedPopup.updateTimestamp();
+  globals.lastSawHomeFeed.updateTimestamp();
 
   globals.popup = popup;
   globals.popupView = popupView;
