@@ -13,11 +13,15 @@ Jamlet.globals = (function() {
     lastSawHomeFeed.updateTimestamp();
   });
 
-  return {
+  var globals = {
     api:             api,
     browser:         browser,
     lastSawHomeFeed: lastSawHomeFeed,
     homeFeed:        homeFeed,
     createJam:       createJam
-  }
+  };
+
+  browser.getExtensionVersion(function(v) { globals.extensionVersion = v; });
+
+  return globals;
 })();

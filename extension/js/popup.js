@@ -1,3 +1,24 @@
+Link = {
+  withTracking: function(url, options) {
+    options = options || {};
+
+    var params = {
+      utm_source: "jamlet",
+      utm_medium: "click"
+    };
+
+    if (options.type)       params.utm_campaign = options.type;
+    if (this.extensionVersion) params.utm_content  = this.extensionVersion;
+
+    var pairs = _.pairs(params).map(function(pair) { return escape(pair[0]) + '=' + escape(pair[1]) });
+
+    url += (url.match(/\?/)) ? '&' : '?';
+    url += pairs.join('&');
+
+    return url;
+  }
+};
+
 Popup = Backbone.Model.extend({
   initialize: function(options) {
     this.api     = options.api;
@@ -94,7 +115,8 @@ SignInView = Backbone.View.extend({
   },
 
   render: function() {
-    $(this.el).addClass('sign-in').html('You need to <a href="' + this.api.baseWebURL + '">sign in</a>.');
+    var signInURL = Link.withTracking(this.api.baseWebURL, {type: 'signedOut'});
+    $(this.el).addClass('sign-in').html('You need to <a href="' + signInURL + '">sign in</a>.');
   }
 });
 
@@ -128,7 +150,8 @@ CreateJamView = Backbone.View.extend({
 
   openCreateJamPage: function() {
     if (this.isJammable()) {
-      this.browser.createTab({url: this.model.get('url')});
+      var url = Link.withTracking(this.model.get('url'), {type: 'makeThisMyJam'});
+      this.browser.createTab({url: url});
     }
   },
 
@@ -173,7 +196,8 @@ CurrentJamView = Backbone.View.extend({
         if (jam.likesCount    > 0) $("<div/>").addClass("stat").addClass("likes-count").text(jam.likesCount).appendTo(stats);
         if (jam.commentsCount > 0) $("<div/>").addClass("stat").addClass("comments-count").text(jam.commentsCount).appendTo(stats);
       } else {
-        var createJamLink = $("<a/>").html("What&rsquo;s your favourite song right now?").attr('href', this.api.baseWebURL + '/jam/create');
+        var createJamURL = Link.withTracking(this.api.baseWebURL + '/jam/create', {type: 'noCurrentJam'});
+        var createJamLink = $("<a/>").html("What&rsquo;s your favourite song right now?").attr('href', createJamURL);
         $("<div/>").append(createJamLink).appendTo(this.el);
         $("<div/>").text("Make it your jam and share it with your friends!").appendTo(this.el);
       }
@@ -182,7 +206,8 @@ CurrentJamView = Backbone.View.extend({
 
   openJam: function() {
     if (this.hasJam()) {
-      this.browser.createTab({url: this.model.get('url')});
+      var url = Link.withTracking(this.model.get('url'), {type: 'currentJam'});
+      this.browser.createTab({url: url});
     }
   },
 
@@ -208,10 +233,12 @@ HomeFeedView = Backbone.View.extend({
       .empty();
 
     if (this.model.models.length === 0) {
+      var suggestionsURL = Link.withTracking(this.api.baseWebURL + "/suggestions", {type: 'noJams'});
+
       if (this.currentUser.get('followingCount') > 0) {
-        $(this.el).html("<div class='no-jams'>No jams from people you follow. Why not <a href='" + this.api.baseWebURL + "/suggestions'>find more people to get music from?</a></div>");
+        $(this.el).html("<div class='no-jams'>No jams from people you follow. Why not <a href='" + suggestionsURL + "'>find more people to get music from?</a></div>");
       } else {
-        $(this.el).html("<div class='no-jams'><a href='" + this.api.baseWebURL + "/suggestions'>Follow some people</a> whose music you like, and their jams will appear here!</div>");
+        $(this.el).html("<div class='no-jams'><a href='" + suggestionsURL + "'>Follow some people</a> whose music you like, and their jams will appear here!</div>");
       }
     }
 
@@ -227,7 +254,9 @@ HomeFeedView = Backbone.View.extend({
       $("<div/>").addClass("user").text(jam.from + '\u2019s jam').appendTo(info);
       $("<div/>").addClass("song").text(jam.title + ' by ' + jam.artist).appendTo(info);
 
-      item.click(function() { browser.createTab({url: jam.url}); });
+      var url = Link.withTracking(jam.url, {type: 'homeFeedJam'});
+      item.click(function() { browser.createTab({url: url}); });
+
       item.appendTo(element);
     });
 
@@ -260,6 +289,8 @@ HomeFeedView = Backbone.View.extend({
 setTimeout(function() {
   var popupElement = $('#popup');
   var globals = chrome.extension.getBackgroundPage().Jamlet.globals;
+
+  Link.extensionVersion = globals.extensionVersion;
 
   var popup = new Popup({
     api:       globals.api,

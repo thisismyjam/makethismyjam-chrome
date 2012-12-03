@@ -21,6 +21,12 @@ Jamlet.Browser.prototype = {
     })
   },
 
+  getExtensionVersion: function(callback) {
+    $.getJSON('manifest.json', function(manifest) {
+      callback(manifest.version);
+    });
+  },
+
   onTabChanged: function(callback) {
     chrome.tabs.onActivated.addListener(function(tabInfo) {
       this._fetchTab(tabInfo.tabId, callback);
