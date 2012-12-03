@@ -18,6 +18,22 @@ body {
   left: 50%;
 }
 
+.sign-in {
+  text-align: center;
+  margin: 30px 12px;
+  font-size: 13px;
+  color: #888;
+}
+
+.sign-in p {
+  margin-top: 16px;
+}
+
+.sign-in .about {
+  font-size: 11px;
+  color: #bbb;
+}
+
 .create-jam {
   display: none;
 }

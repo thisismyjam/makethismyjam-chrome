@@ -120,7 +120,8 @@ SignInView = Backbone.View.extend({
 
   render: function() {
     var signInURL = Link.withTracking(this.api.baseWebURL, {type: 'signedOut'});
-    $(this.el).addClass('sign-in').html('You need to <a href="' + signInURL + '">sign in</a>.');
+    var aboutURL  = Link.withTracking(this.api.baseWebURL + '/jamlet', {type: 'signedOut'});
+    $(this.el).addClass('sign-in').html('<h1>Welcome to Jamlet!</h1><p>To get started, sign in to <a href="' + signInURL + '">www.thisismyjam.com</a>.</p><p class="about">Confused? <a href="' + aboutURL + '">Don&rsquo;t be.</a></p>');
   }
 });
 
