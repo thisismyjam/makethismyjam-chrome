@@ -41,6 +41,10 @@ Popup = Backbone.Model.extend({
       if (error) {
         this.set({status: 'unauthenticated'});
       } else {
+        if (!this.homeFeed.hasLoadedOnce()) {
+          this.homeFeed.fetch();
+        }
+
         this.api.fetchCurrentJam(function(error, response) {
           if (error) {
             // ignore error for now
@@ -231,6 +235,10 @@ HomeFeedView = Backbone.View.extend({
     $(element)
       .addClass('home-feed')
       .empty();
+
+    if (!this.model.hasLoadedOnce()) {
+      return;
+    }
 
     if (this.model.models.length === 0) {
       var suggestionsURL = Link.withTracking(this.api.baseWebURL + "/suggestions", {type: 'noJams'});

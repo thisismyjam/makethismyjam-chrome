@@ -2,6 +2,8 @@ Jamlet.HomeFeed = Backbone.Collection.extend({
   initialize: function(models, options) {
     this.api = options.api;
     this.timeKeeper = options.timeKeeper;
+    this._hasLoadedOnce = false;
+
     this.timeKeeper.on('update', this.filterJams, this);
     this.on('reset', this.filterJams, this);
   },
@@ -17,6 +19,7 @@ Jamlet.HomeFeed = Backbone.Collection.extend({
 
       api.fetchHomeFeed(function(error, response) {
         if (response) {
+          collection._hasLoadedOnce = true;
           collection.reset(response.jams);
 
           if (typeof(options.success) === 'function') {
@@ -25,6 +28,10 @@ Jamlet.HomeFeed = Backbone.Collection.extend({
         }
       });
     });
+  },
+
+  hasLoadedOnce: function() {
+    return this._hasLoadedOnce;
   },
 
   filterJams: function(jams) {
