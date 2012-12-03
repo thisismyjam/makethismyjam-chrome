@@ -9,6 +9,7 @@
     },
     "background": {
         "scripts": [
+            "js/vendor/ga.js",
             "js/vendor/jquery.js",
             "js/vendor/underscore.js",
             "js/vendor/backbone.js",
