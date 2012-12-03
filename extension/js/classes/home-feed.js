@@ -7,6 +7,8 @@ Jamlet.HomeFeed = Backbone.Collection.extend({
   },
 
   fetch: function(options) {
+    options = options || {};
+
     var collection = this;
     var api = this.api;
 
@@ -17,7 +19,7 @@ Jamlet.HomeFeed = Backbone.Collection.extend({
         if (response) {
           collection.reset(response.jams);
 
-          if (options.success) {
+          if (typeof(options.success) === 'function') {
             options.success(collection, response, {});
           }
         }
