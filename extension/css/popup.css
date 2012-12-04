@@ -83,7 +83,6 @@ body {
   display: block;
   overflow: hidden;
 
-  padding: 10px 10px 8px;
   border-top: 1px solid #c2c2c2;
   box-shadow: 0 1px 0 white inset;
   font-size: 13px;
@@ -98,7 +97,7 @@ body {
 
 .current-jam .jamvatar {
   float: left;
-  margin-right: 8px;
+  margin: 10px 8px 10px 10px;
 }
 
 .current-jam .jamvatar img {
@@ -108,10 +107,10 @@ body {
 
 .current-jam .info {
   overflow: hidden;
+  margin: 8px;
 }
 
 .current-jam .title {
-  line-height: 12px;
   margin-bottom: 4px;
 }
 
