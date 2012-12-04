@@ -81,6 +81,7 @@ body {
 
 .current-jam[data-status="available"] {
   display: block;
+  overflow: hidden;
 
   padding: 10px 10px 8px;
   border-top: 1px solid #c2c2c2;
