@@ -167,7 +167,6 @@ body {
   overflow: hidden;
   font-size: 13px;
   position: relative;
-  padding: 10px;
 }
 
 .jam[data-seen="false"] {
@@ -190,16 +189,15 @@ body {
 
 .jam .jamvatar {
   float: left;
-  margin-right: 6px;
+  margin: 10px 6px 10px 10px;
 }
 
 .jam .info {
   overflow: hidden;
-  line-height: 17px;
+  line-height: 20px;
+  margin: 5px 10px 5px 6px;
 }
 
 .jam .user {
   font-weight: bold;
-  line-height: 10px;
-  margin-bottom: 4px;
 }
