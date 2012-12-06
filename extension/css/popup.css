@@ -127,6 +127,10 @@ body {
   color: #6e6e6e;
 }
 
+.current-jam[data-status="available"]:hover {
+  color: #3d3d3d;
+}
+
 .current-jam[data-has-jam="true"] {
   cursor: pointer;
 }
@@ -165,9 +169,12 @@ body {
   display: none;
 }
 
-.current-jam .play-count     { background-position: right  -9px; padding-right: 21px; }
-.current-jam .likes-count    { background-position: right -89px; padding-right: 19px; }
-.current-jam .comments-count { background-position: right -49px; padding-right: 19px; }
+.current-jam       .play-count     { background-position: right  -9px; padding-right: 21px; }
+.current-jam:hover .play-count     { background-position: right -29px; }
+.current-jam       .likes-count    { background-position: right -89px; padding-right: 19px; }
+.current-jam:hover .likes-count    { background-position: right -109px; }
+.current-jam       .comments-count { background-position: right -49px; padding-right: 19px; }
+.current-jam:hover .comments-count { background-position: right -69px; }
 
 .home-feed {
   list-style: none;
