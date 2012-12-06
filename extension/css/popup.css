@@ -149,11 +149,12 @@ body {
 
 .current-jam .info {
   overflow: hidden;
-  margin: 8px;
+  margin: 7px 8px;
 }
 
 .current-jam .title {
   margin-bottom: 4px;
+  line-height: 17px;
 }
 
 .current-jam .stat {
@@ -186,7 +187,7 @@ body {
 
 .home-feed .jam {
   border-top: 1px solid #e1e1e1;
-  box-shadow: 0 1px 0 white inset;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 1) inset;
   cursor: pointer;
   color: #282828;
 }
@@ -197,7 +198,8 @@ body {
 }
 
 .home-feed .jam:hover {
-  background: #eee;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.7) inset;
 }
 
 .no-jams {
@@ -214,7 +216,7 @@ body {
 }
 
 .jam[data-seen="false"] {
-  background: #ffffeb;
+  background: rgba(255, 255, 235, 0.8);
 }
 
 .jam .timestamp {
@@ -238,8 +240,8 @@ body {
 
 .jam .info {
   overflow: hidden;
-  line-height: 20px;
-  margin: 5px 10px 5px 6px;
+  line-height: 17px;
+  margin: 7px 10px 5px 6px;
 }
 
 .jam .user {
