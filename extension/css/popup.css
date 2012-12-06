@@ -35,7 +35,7 @@ body {
   margin-bottom: 12px;
 }
 
-.sign-in a {
+.sign-in p a {
   color: #827B00;
   text-decoration: none;
 }
@@ -51,7 +51,6 @@ body {
 
   display: block;
   text-align: center;
-  font-weight: bold;
   padding-top: 12px;
   padding-bottom: 7px;
   border-radius: 4px;
@@ -95,12 +94,12 @@ body {
   font-family: Helvetica, Arial, sans-serif;
   padding: 8px 11px 3px;
   min-width:40px;
-  font-weight: normal;
+  font-weight: bold;
   font-style: normal;
 
   background: -webkit-linear-gradient(top, rgba(255,240,0,1) 0%,rgba(223,213,0,1) 100%);
   border:1px solid #d0c440;
-  color: #595510;
+  color: #827B00;
   text-shadow:0 1px 1px #FFFCDE;
 }
 
