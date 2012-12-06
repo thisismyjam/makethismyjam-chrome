@@ -153,7 +153,6 @@ body {
 .current-jam .stat {
   display: inline-block;
   background: url('/img/home_actions.png') no-repeat;
-  padding-right: 19px;
 }
 
 .current-jam .stat:before {
@@ -166,9 +165,9 @@ body {
   display: none;
 }
 
-.current-jam .play-count     { background-position: right -9px; padding-right: 21px; }
-.current-jam .likes-count    { background-position: right -89px; }
-.current-jam .comments-count { background-position: right -49px; }
+.current-jam .play-count     { background-position: right  -9px; padding-right: 21px; }
+.current-jam .likes-count    { background-position: right -89px; padding-right: 19px; }
+.current-jam .comments-count { background-position: right -49px; padding-right: 19px; }
 
 .home-feed {
   list-style: none;
