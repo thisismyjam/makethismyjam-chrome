@@ -19,19 +19,52 @@ body {
 }
 
 .sign-in {
-  text-align: center;
-  margin: 30px 12px;
-  font-size: 13px;
-  color: #888;
+  padding: 24px 32px 35px 90px;
+  font-size: 12px;
+  color: #282828;
+  background:
+    url('/img/icon-48.png') 32px 21px no-repeat,
+    -webkit-linear-gradient(top, rgb(249,249,249) 0%, rgb(249,249,249) 66%, rgb(241,241,241) 66%, rgb(241,241,241) 100%);
 }
 
 .sign-in p {
-  margin-top: 16px;
+  line-height: 16px;
+  margin-bottom: 12px;
 }
 
-.sign-in .about {
-  font-size: 11px;
-  color: #bbb;
+.sign-in a {
+  color: #827B00;
+  text-decoration: none;
+}
+
+.sign-in p a:hover {
+  color:#635d00;
+  text-decoration:underline;
+}
+
+.sign-in .button {
+  position: relative;
+  z-index: 1;
+
+  display: block;
+  text-align: center;
+  font-weight: bold;
+  padding-top: 12px;
+  padding-bottom: 7px;
+  border-radius: 4px;
+}
+
+.sign-in .ribbon {
+  display: block;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 49px;
+  height: 49px;
+
+  overflow: hidden;
+  text-indent: -1000em;
+  background: url('/img/ribbon.png') top left no-repeat;
 }
 
 .create-jam {
@@ -47,27 +80,30 @@ body {
   border-bottom: 1px solid #c2c2c2;
 }
 
-.create-jam button {
-  background: -webkit-linear-gradient(top,rgba(255,240,0,1) 0,rgba(223,213,0,1) 100%);
+.button {
   border-radius: 2px;
-  color: #444;
+
   display: inline-block;
   font-size: 13px;
   text-decoration: none;
-  text-shadow: 0 1px rgba(255,255,255,.75);
   cursor: pointer;
-  height: 20px;
-  box-sizing: content-box;
-  border: 1px solid #ccc;
-  padding: 5px 11px 3px;
-  min-width: 40px;
-  font-family: helvetica, arial, sans-serif;
+
+  height:20px;
+  font-family: Helvetica, Arial, sans-serif;
+  padding: 8px 11px 3px;
+  min-width:40px;
   font-weight: normal;
   font-style: normal;
+
+  background: -webkit-linear-gradient(top, rgba(255,240,0,1) 0%,rgba(223,213,0,1) 100%);
+  border:1px solid #d0c440;
+  color: #595510;
+  text-shadow:0 1px 1px #FFFCDE;
 }
 
-.create-jam button:hover {
+.button:hover {
   background: -webkit-linear-gradient(top, rgba(246,237,0,1) 0%,rgba(216,198,0,1) 100%);
+  border-color:#D0C440;
 }
 
 .create-jam .source {

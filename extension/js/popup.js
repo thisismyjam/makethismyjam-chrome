@@ -119,17 +119,19 @@ SignInView = Backbone.View.extend({
   },
 
   render: function() {
-    var signInURL = Link.withTracking(this.api.baseWebURL, {type: 'signedOut'});
+    var signInURL = Link.withTracking(this.api.baseWebURL + '?signin=1', {type: 'signedOut'});
     var aboutURL  = Link.withTracking(this.api.baseWebURL + '/jamlet', {type: 'signedOut'});
-    $(this.el).addClass('sign-in').html('<h1>Welcome to Jamlet!</h1><p>To get started, sign in to <a href="' + signInURL + '">www.thisismyjam.com</a>.</p><p class="about">Confused? <a href="' + aboutURL + '">Don&rsquo;t be.</a></p>');
+    var extensionURL = 'https://chrome.google.com/webstore/detail/jamlet/cdakbflgliddhhegidnfmcgbgpelgknk';
+
+    $(this.el)
+      .addClass('sign-in')
+      .append('<p><b>Post music to This Is My Jam</b> and be notified when people you follow post new songs to listen to! <a href="' + aboutURL + '">Learn More &raquo;</a></p>')
+      .append('<a class="button" href="' + signInURL + '">Sign in to start using Jamlet</a>')
+      .append('<a href="' + extensionURL + '" class="ribbon">v0.2</a>');
   }
 });
 
 CreateJamView = Backbone.View.extend({
-  events: {
-    "click button": "openCreateJamPage"
-  },
-
   initialize: function(options) {
     this.browser = options.browser;
     this.model.on("change", this.render, this);
@@ -145,18 +147,13 @@ CreateJamView = Backbone.View.extend({
       var type = this.model.get('type');
       type = type[0].toUpperCase() + type.substring(1).toLowerCase();
 
-      $("<button>Make this my jam</button>").appendTo(this.el);
+      var url = Link.withTracking(this.model.get('url'), {type: 'makeThisMyJam'});
+
+      $("<a class='button' href='" + url + "'>Make this my jam</button>").appendTo(this.el);
       $("<div/>")
         .addClass('source')
         .text(type + " will be sourced from this page: \u201C" + this.model.get('title') + "\u201D")
         .appendTo(this.el);
-    }
-  },
-
-  openCreateJamPage: function() {
-    if (this.isJammable()) {
-      var url = Link.withTracking(this.model.get('url'), {type: 'makeThisMyJam'});
-      this.browser.createTab({url: url});
     }
   },
 
