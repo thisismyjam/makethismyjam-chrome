@@ -9,6 +9,9 @@ body {
 
 #popup {
   width: 330px;
+}
+
+.authenticating {
   min-height: 100px;
 }
 
