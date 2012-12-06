@@ -19,7 +19,7 @@ Jamlet.Badge.prototype = {
 
     if (unseenCount > 0) {
       this.browser.updateBadge({
-        color: "#d1bb00",
+        color: "#ffde00",
         text:  String(unseenCount)
       });
     } else {
