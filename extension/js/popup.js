@@ -134,7 +134,6 @@ SignInView = Backbone.View.extend({
 CreateJamView = Backbone.View.extend({
   initialize: function(options) {
     this.browser = options.browser;
-    this.model.on("change", this.render, this);
   },
 
   render: function() {
