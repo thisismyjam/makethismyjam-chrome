@@ -14,7 +14,9 @@ Jamlet.Browser.prototype = {
   },
 
   onJamHomepageLoaded: function(callback) {
-    chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
+    var event = chrome.extension.onMessage || chrome.extension.onRequest;
+
+    event.addListener(function(request, sender, sendResponse) {
       if (request.type === 'jamHomepageLoaded') {
         callback();
       }
