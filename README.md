@@ -1,26 +1,17 @@
 jamlet
 ======
 
-**Jamlet** is a little extension that lets you change your jam on [This Is My Jam] based on the contents of your current tab in Chrome.
+Jamlet is a little companion to [This Is My Jam]. Change your jam straight from supported music sites, and get notified about new jams from your friends.
 
-If you're browsing on any of the following pages (more services coming soon!):
+You can jam from any of the following pages:
 
-* A SoundCloud track page
-* A YouTube video page
-* A Hype Machine track page
-* A Bandcamp-powered track page
-* A direct MP3 link
-
-
-…then a "JAM" icon will appear in your URL bar. 
-
-Click it to go directly to the jam preview / customisation screen on This Is My Jam, bypassing that pesky search step. Sweet!
-
-
-*Conceived by [Matthew Ogle] on the train to [Music Hack Day Scotland], 24 August 2012. This could be much better, care to help?*
-
-
+- A SoundCloud track page
+- A YouTube video page
+- A Hype Machine track page
+- A Bandcamp-powered track page
+- A direct MP3 link
+- A Vimeo video page
+- An Official.fm track page
 
 [This Is My Jam]: http://www.thisismyjam.com
-[Matthew Ogle]: http://mattogle.com
-[Music Hack Day Scotland]: http://scotland.musichackday.org
+
