@@ -1,49 +1,35 @@
 {
-    "name": "Jamlet",
-    "version": "0.2.0.30",
-    "description": "Post music to This Is My Jam and be notified when people you follow post new songs to listen to.",
-    "browser_action": {
-        "default_icon": "img/toolbar/icon_rest.png",
-        "default_popup": "html/popup.html"
-    },
-    "background": {
-        "scripts": [
-            "js/vendor/ga.js",
-            "js/vendor/jquery.js",
-            "js/vendor/underscore.js",
-            "js/vendor/backbone.js",
-            "js/classes/jamlet.js",
-            "js/classes/api.js",
-            "js/classes/browser.js",
-            "js/classes/time-keeper.js",
-            "js/classes/checker.js",
-            "js/classes/home-feed.js",
-            "js/classes/create-jam.js",
-            "js/classes/badge.js",
-            "js/background.js"
-        ]
-    },
-    "content_scripts": [
-        {
-            "matches": [
-                "http://*.thisismyjam.com/*",
-                "https://*.thisismyjam.com/*"
-            ],
-            "js": [
-                "js/contentscript.js"
-            ],
-            "run_at": "document_start"
-        }
-    ],
-    "permissions": [
-        "tabs",
+  "name": "Jamlet",
+  "version": "0.2.0.30",
+  "description": "Post music to This Is My Jam and be notified when people you follow post new songs to listen to.",
+  "browser_action": {
+    "default_icon": "img/toolbar/icon_rest.png",
+    "default_popup": "html/popup.html"
+  },
+  "background": {
+    "scripts": ["js/vendor/ga.js", "js/vendor/jquery.js", "js/vendor/underscore.js", "js/vendor/backbone.js", "js/classes/jamlet.js", "js/classes/api.js", "js/classes/browser.js", "js/classes/time-keeper.js", "js/classes/checker.js", "js/classes/home-feed.js", "js/classes/create-jam.js", "js/classes/badge.js", "js/background.js"]
+  },
+  "content_scripts": [
+    {
+      "matches": [
         "http://*.thisismyjam.com/*",
         "https://*.thisismyjam.com/*"
-    ],
-    "icons": {
-        "48": "img/icon-48.png",
-        "128": "img/icon-128.png"
-    },
-    "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'",
-    "manifest_version": 2
+      ],
+      "js": [
+        "js/contentscript.js"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "permissions": [
+    "tabs",
+    "http://*.thisismyjam.com/*",
+    "https://*.thisismyjam.com/*"
+  ],
+  "icons": {
+    "48": "img/icon-48.png",
+    "128": "img/icon-128.png"
+  },
+  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'",
+  "manifest_version": 2
 }
