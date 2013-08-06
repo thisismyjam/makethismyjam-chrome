@@ -1,6 +1,5 @@
 # Make This My Jam
-## For Chrome
--------------
+### For Chrome
 
 A little companion to [This Is My Jam]. Change your jam straight from supported music sites, and get notified about new jams from your friends.
 
