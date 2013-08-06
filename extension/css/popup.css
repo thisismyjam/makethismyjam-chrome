@@ -56,19 +56,6 @@ body {
   border-radius: 4px;
 }
 
-.sign-in .ribbon {
-  display: block;
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 49px;
-  height: 49px;
-
-  overflow: hidden;
-  text-indent: -1000em;
-  background: url('/img/ribbon.png') top left no-repeat;
-}
-
 .create-jam {
   display: none;
 }

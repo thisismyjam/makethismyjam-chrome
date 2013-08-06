@@ -1,7 +1,8 @@
-jamlet
+Make This My Jam 
+for Chrome
 ======
 
-Jamlet is a little companion to [This Is My Jam]. Change your jam straight from supported music sites, and get notified about new jams from your friends.
+A little companion to [This Is My Jam]. Change your jam straight from supported music sites, and get notified about new jams from your friends.
 
 You can jam from any of the following pages:
 

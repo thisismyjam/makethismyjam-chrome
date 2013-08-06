@@ -121,13 +121,11 @@ SignInView = Backbone.View.extend({
   render: function() {
     var signInURL = Link.withTracking(this.api.baseWebURL + '?signin=1', {type: 'signedOut'});
     var aboutURL  = Link.withTracking(this.api.baseWebURL + '/jamlet', {type: 'signedOut'});
-    var extensionURL = 'https://chrome.google.com/webstore/detail/jamlet/cdakbflgliddhhegidnfmcgbgpelgknk';
 
     $(this.el)
       .addClass('sign-in')
       .append('<p><b>Post music to This Is My Jam</b> and be notified when people you follow post new songs to listen to! <a href="' + aboutURL + '">Learn More &raquo;</a></p>')
-      .append('<a class="button" href="' + signInURL + '">Sign in to start using Jamlet</a>')
-      .append('<a href="' + extensionURL + '" class="ribbon">v0.2</a>');
+      .append('<a class="button" href="' + signInURL + '">Sign in to get started</a>')
   }
 });
 
