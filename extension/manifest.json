@@ -1,6 +1,6 @@
 {
   "name": "Make this my jam",
-  "version": "0.3.0.1",
+  "version": "0.3.0.2",
   "description": "Post music to This Is My Jam and be notified when people you follow post new songs to listen to.",
   "browser_action": {
     "default_icon": "img/toolbar/icon_rest.png",
